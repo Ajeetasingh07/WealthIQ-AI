@@ -1,0 +1,9 @@
+date,merchant,amount,type
+2026-01-02,Amazon,1299,expense
+2026-01-05,Salary,45000,income
+2026-01-08,Netflix,649,expense
+2026-01-10,Swiggy,520,expense
+2026-01-12, Electricity Bill,1800,expense
+2026-01-15,uber,350,expense
+2026-01-20,Amazon,2499,expense
+2026-01-21,Salary,45000,income
