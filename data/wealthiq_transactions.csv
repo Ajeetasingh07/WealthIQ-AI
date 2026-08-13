@@ -1,0 +1,206 @@
+date,merchant,amount,type,category
+2025-01-01,Salary,45000,income,Income
+2025-01-02,Uber,328,expense,Transport
+2025-01-03,Dominos,908,expense,Food
+2025-01-05,Netflix,261,expense,Entertainment
+2025-01-06,Myntra,517,expense,Shopping
+2025-01-12,Swiggy,864,expense,Food
+2025-01-14,Flipkart,1137,expense,Shopping
+2025-01-15,Zomato,502,expense,Food
+2025-01-28,Flipkart,953,expense,Shopping
+2025-02-01,Salary,45000,income,Income
+2025-02-03,Uber,786,expense,Transport
+2025-02-04,Dominos,800,expense,Food
+2025-02-05,Amazon,4086,expense,Shopping
+2025-02-13,Zomato,560,expense,Food
+2025-02-14,Myntra,2877,expense,Shopping
+2025-02-15,Spotify,1139,expense,Entertainment
+2025-02-16,Amazon,4898,expense,Shopping
+2025-02-23,Netflix,296,expense,Entertainment
+2025-02-25,Myntra,3758,expense,Shopping
+2025-03-01,Salary,45000,income,Income
+2025-03-02,Electricity Bill,969,expense,Bills
+2025-03-05,Uber,400,expense,Transport
+2025-03-10,Electricity Bill,2579,expense,Bills
+2025-03-13,Internet Bill,1314,expense,Bills
+2025-03-14,Myntra,4644,expense,Shopping
+2025-03-18,Ola,345,expense,Transport
+2025-03-19,Electricity Bill,850,expense,Bills
+2025-03-24,BookMyShow,538,expense,Entertainment
+2025-03-25,Mobile Bill,1367,expense,Bills
+2025-04-01,Salary,45000,income,Income
+2025-04-04,Zomato,171,expense,Food
+2025-04-06,Amazon,881,expense,Shopping
+2025-04-08,Swiggy,488,expense,Food
+2025-04-09,Flipkart,4276,expense,Shopping
+2025-04-10,Myntra,4977,expense,Shopping
+2025-04-12,Spotify,589,expense,Entertainment
+2025-04-13,Spotify,1067,expense,Entertainment
+2025-04-16,Swiggy,562,expense,Food
+2025-04-19,Amazon,4693,expense,Shopping
+2025-04-22,Amazon,3930,expense,Shopping
+2025-04-25,Electricity Bill,882,expense,Bills
+2025-04-28,Spotify,637,expense,Entertainment
+2025-05-01,Salary,45000,income,Income
+2025-05-01,Zomato,421,expense,Food
+2025-05-04,Internet Bill,2493,expense,Bills
+2025-05-05,Uber,159,expense,Transport
+2025-05-09,Mobile Bill,2559,expense,Bills
+2025-05-12,Electricity Bill,1261,expense,Bills
+2025-05-13,Dominos,390,expense,Food
+2025-05-18,Zomato,823,expense,Food
+2025-05-22,Uber,371,expense,Transport
+2025-05-25,Uber,109,expense,Transport
+2025-05-29,Myntra,2472,expense,Shopping
+2025-05-30,Uber,350,expense,Transport
+2025-06-01,Salary,45000,income,Income
+2025-06-01,Internet Bill,1739,expense,Bills
+2025-06-05,Mobile Bill,924,expense,Bills
+2025-06-07,Swiggy,910,expense,Food
+2025-06-09,Electricity Bill,1904,expense,Bills
+2025-06-10,Metro,600,expense,Transport
+2025-06-11,Swiggy,799,expense,Food
+2025-06-13,Zomato,939,expense,Food
+2025-06-14,Uber,552,expense,Transport
+2025-06-17,Dominos,302,expense,Food
+2025-06-21,Amazon,2825,expense,Shopping
+2025-06-25,Uber,798,expense,Transport
+2025-06-26,Zomato,948,expense,Food
+2025-07-01,Salary,45000,income,Income
+2025-07-02,Amazon,3677,expense,Shopping
+2025-07-03,Ola,785,expense,Transport
+2025-07-06,Zomato,189,expense,Food
+2025-07-08,Spotify,825,expense,Entertainment
+2025-07-11,Flipkart,2989,expense,Shopping
+2025-07-12,Zomato,509,expense,Food
+2025-07-18,Uber,694,expense,Transport
+2025-07-20,Dominos,594,expense,Food
+2025-07-21,Ola,720,expense,Transport
+2025-07-23,Electricity Bill,1543,expense,Bills
+2025-07-24,Netflix,1264,expense,Entertainment
+2025-07-31,Metro,421,expense,Transport
+2025-08-01,Salary,45000,income,Income
+2025-08-02,Metro,416,expense,Transport
+2025-08-04,Metro,230,expense,Transport
+2025-08-05,BookMyShow,556,expense,Entertainment
+2025-08-07,Electricity Bill,1744,expense,Bills
+2025-08-08,BookMyShow,1442,expense,Entertainment
+2025-08-12,BookMyShow,547,expense,Entertainment
+2025-08-14,Mobile Bill,882,expense,Bills
+2025-08-18,Amazon,500,expense,Shopping
+2025-08-19,BookMyShow,349,expense,Entertainment
+2025-08-26,Swiggy,947,expense,Food
+2025-08-28,Mobile Bill,705,expense,Bills
+2025-08-31,Flipkart,4651,expense,Shopping
+2025-09-01,Salary,45000,income,Income
+2025-09-13,Myntra,2571,expense,Shopping
+2025-09-17,Dominos,442,expense,Food
+2025-09-18,Ola,653,expense,Transport
+2025-09-19,Amazon,3437,expense,Shopping
+2025-09-22,Spotify,1311,expense,Entertainment
+2025-09-24,Spotify,1396,expense,Entertainment
+2025-09-26,Mobile Bill,2453,expense,Bills
+2025-09-27,Ola,499,expense,Transport
+2025-10-01,Salary,45000,income,Income
+2025-10-04,Flipkart,3870,expense,Shopping
+2025-10-17,Netflix,1145,expense,Entertainment
+2025-10-18,Ola,435,expense,Transport
+2025-10-19,Ola,488,expense,Transport
+2025-10-20,Spotify,367,expense,Entertainment
+2025-10-23,Uber,765,expense,Transport
+2025-10-24,Swiggy,403,expense,Food
+2025-10-25,Dominos,306,expense,Food
+2025-10-26,BookMyShow,434,expense,Entertainment
+2025-10-28,Ola,271,expense,Transport
+2025-11-01,Salary,45000,income,Income
+2025-11-02,Uber,692,expense,Transport
+2025-11-03,Metro,793,expense,Transport
+2025-11-07,Internet Bill,1494,expense,Bills
+2025-11-08,Metro,714,expense,Transport
+2025-11-12,Mobile Bill,2017,expense,Bills
+2025-11-13,Uber,530,expense,Transport
+2025-11-15,Metro,570,expense,Transport
+2025-11-20,Mobile Bill,2404,expense,Bills
+2025-11-23,Amazon,2584,expense,Shopping
+2025-11-25,BookMyShow,1449,expense,Entertainment
+2025-11-27,Spotify,572,expense,Entertainment
+2025-11-30,Metro,382,expense,Transport
+2025-12-01,Salary,45000,income,Income
+2025-12-03,Myntra,3629,expense,Shopping
+2025-12-10,Flipkart,2293,expense,Shopping
+2025-12-11,Mobile Bill,2438,expense,Bills
+2025-12-13,Mobile Bill,1941,expense,Bills
+2025-12-15,Uber,223,expense,Transport
+2025-12-17,Internet Bill,1258,expense,Bills
+2025-12-18,Spotify,1407,expense,Entertainment
+2025-12-21,Swiggy,453,expense,Food
+2025-12-22,Flipkart,415,expense,Shopping
+2025-12-24,Swiggy,716,expense,Food
+2025-12-25,Myntra,4321,expense,Shopping
+2025-12-26,Dominos,441,expense,Food
+2025-12-29,Zomato,639,expense,Food
+2025-12-30,Zomato,653,expense,Food
+2025-12-31,Swiggy,302,expense,Food
+2026-01-01,Salary,45000,income,Income
+2026-01-03,Amazon,4871,expense,Shopping
+2026-01-07,Mobile Bill,2345,expense,Bills
+2026-01-09,Mobile Bill,1750,expense,Bills
+2026-01-11,Swiggy,790,expense,Food
+2026-01-12,Swiggy,395,expense,Food
+2026-01-13,Swiggy,152,expense,Food
+2026-01-17,Metro,389,expense,Transport
+2026-01-31,Flipkart,4962,expense,Shopping
+2026-02-01,Salary,45000,income,Income
+2026-02-04,Spotify,1224,expense,Entertainment
+2026-02-11,Myntra,469,expense,Shopping
+2026-02-14,Swiggy,631,expense,Food
+2026-02-17,Mobile Bill,2514,expense,Bills
+2026-02-21,Swiggy,487,expense,Food
+2026-02-27,Zomato,408,expense,Food
+2026-02-28,BookMyShow,202,expense,Entertainment
+2026-03-01,Salary,45000,income,Income
+2026-03-04,Metro,610,expense,Transport
+2026-03-07,Electricity Bill,1679,expense,Bills
+2026-03-10,Electricity Bill,1148,expense,Bills
+2026-03-11,Dominos,567,expense,Food
+2026-03-12,Zomato,270,expense,Food
+2026-03-14,Metro,379,expense,Transport
+2026-03-19,Myntra,4463,expense,Shopping
+2026-03-21,Zomato,941,expense,Food
+2026-03-27,Metro,693,expense,Transport
+2026-03-30,Mobile Bill,1913,expense,Bills
+2026-03-31,Mobile Bill,2365,expense,Bills
+2026-04-01,Salary,45000,income,Income
+2026-04-04,Netflix,1041,expense,Entertainment
+2026-04-05,BookMyShow,980,expense,Entertainment
+2026-04-11,Internet Bill,1859,expense,Bills
+2026-04-20,Spotify,893,expense,Entertainment
+2026-04-23,Metro,646,expense,Transport
+2026-04-25,BookMyShow,273,expense,Entertainment
+2026-04-27,Uber,192,expense,Transport
+2026-04-29,Zomato,320,expense,Food
+2026-05-01,Salary,45000,income,Income
+2026-05-02,Zomato,517,expense,Food
+2026-05-04,Mobile Bill,2818,expense,Bills
+2026-05-06,Amazon,3433,expense,Shopping
+2026-05-08,Electricity Bill,1451,expense,Bills
+2026-05-10,Metro,109,expense,Transport
+2026-05-13,Electricity Bill,802,expense,Bills
+2026-05-15,Mobile Bill,2237,expense,Bills
+2026-05-18,Spotify,418,expense,Entertainment
+2026-05-19,Mobile Bill,2854,expense,Bills
+2026-05-20,Uber,774,expense,Transport
+2026-05-22,Dominos,913,expense,Food
+2026-05-25,Myntra,3186,expense,Shopping
+2026-05-26,Myntra,2353,expense,Shopping
+2026-06-01,Salary,45000,income,Income
+2026-06-03,Netflix,1386,expense,Entertainment
+2026-06-05,Ola,525,expense,Transport
+2026-06-06,Myntra,3297,expense,Shopping
+2026-06-10,Spotify,893,expense,Entertainment
+2026-06-13,Myntra,3555,expense,Shopping
+2026-06-18,Electricity Bill,2362,expense,Bills
+2026-06-21,BookMyShow,960,expense,Entertainment
+2026-06-22,Flipkart,505,expense,Shopping
+2026-06-25,Electricity Bill,758,expense,Bills
+2026-06-30,Swiggy,461,expense,Food
