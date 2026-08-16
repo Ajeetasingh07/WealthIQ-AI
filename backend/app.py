@@ -127,5 +127,22 @@ def dashboard():
         "recommended_budget": round(recommended_budget, 2),
         "budget_status": budget_status
     })
+@app.route("/categories")
+def categories():
+
+    df = pd.read_csv(DATA_FILE)
+
+    expenses = df[df["type"] == "expense"]
+
+    category_spending = (
+        expenses.groupby("category")["amount"]
+        .sum()
+        .sort_values(ascending=False)
+    )
+
+    return jsonify({
+        "categories": category_spending.index.tolist(),
+        "amounts": category_spending.values.astype(float).tolist()
+    })
 if __name__ == "__main__":
     app.run(debug=True)

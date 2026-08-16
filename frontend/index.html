@@ -1,31 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WealthIQ AI</title>
+
+    <title>WealthIQ AI | Finance Dashboard</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
             background: #f4f7fb;
             color: #172033;
         }
 
+        /* HEADER */
+
         header {
             background: #172554;
             color: white;
-            padding: 25px 40px;
+            padding: 30px 50px;
         }
 
         header h1 {
-            margin: 0;
+            font-size: 32px;
+            margin-bottom: 5px;
         }
 
-        .container {
-            padding: 30px 40px;
+        header p {
+            color: #cbd5e1;
         }
+
+        /* MAIN */
+
+        .container {
+            max-width: 1300px;
+            margin: auto;
+            padding: 35px;
+        }
+
+        /* CARDS */
 
         .cards {
             display: grid;
@@ -36,13 +60,16 @@
         .card {
             background: white;
             padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-radius: 16px;
+
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.07);
         }
 
         .card h3 {
-            margin-top: 0;
             color: #64748b;
+            font-size: 15px;
+            margin-bottom: 12px;
         }
 
         .value {
@@ -50,77 +77,244 @@
             font-weight: bold;
         }
 
+        /* SECTIONS */
+
         .section {
-            margin-top: 30px;
             background: white;
-            padding: 25px;
-            border-radius: 15px;
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: 16px;
+
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.07);
         }
 
-        @media (max-width: 900px) {
+        .section h2 {
+            margin-bottom: 20px;
+        }
+
+        /* CHART */
+
+        .chart-container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        /* BUDGET */
+
+        #budget {
+            font-size: 18px;
+            line-height: 1.7;
+        }
+
+        /* CATEGORY */
+
+        #category {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1000px) {
+
             .cards {
                 grid-template-columns: repeat(2, 1fr);
             }
+
         }
 
         @media (max-width: 600px) {
-            .cards {
-                grid-template-columns: 1fr;
+
+            header {
+                padding: 25px;
             }
 
             .container {
                 padding: 20px;
             }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .value {
+                font-size: 24px;
+            }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
+
+<!-- HEADER -->
+
 <header>
+
     <h1>WealthIQ AI</h1>
-    <p>AI-Powered Personal Finance Dashboard</p>
+
+    <p>
+        AI-Powered Personal Finance Management & Predictive Budgeting
+    </p>
+
 </header>
+
+
+
+<!-- MAIN CONTENT -->
 
 <div class="container">
 
+
+    <!-- SUMMARY CARDS -->
+
     <div class="cards">
 
+
         <div class="card">
+
             <h3>Total Income</h3>
-            <div class="value" id="income">Loading...</div>
+
+            <div
+                class="value"
+                id="income">
+                Loading...
+            </div>
+
         </div>
 
+
+
         <div class="card">
+
             <h3>Total Expenses</h3>
-            <div class="value" id="expenses">Loading...</div>
+
+            <div
+                class="value"
+                id="expenses">
+                Loading...
+            </div>
+
         </div>
 
+
+
         <div class="card">
+
             <h3>Current Balance</h3>
-            <div class="value" id="balance">Loading...</div>
+
+            <div
+                class="value"
+                id="balance">
+                Loading...
+            </div>
+
         </div>
+
+
 
         <div class="card">
+
             <h3>Predicted Spending</h3>
-            <div class="value" id="forecast">Loading...</div>
+
+            <div
+                class="value"
+                id="forecast">
+                Loading...
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- BUDGET -->
+
+    <div class="section">
+
+        <h2>
+            🎯 Budget Recommendation
+        </h2>
+
+        <p id="budget">
+            Loading...
+        </p>
+
+    </div>
+
+
+
+    <!-- TOP CATEGORY -->
+
+    <div class="section">
+
+        <h2>
+            🏷️ Top Spending Category
+        </h2>
+
+        <p id="category">
+            Loading...
+        </p>
+
+    </div>
+
+
+
+    <!-- SPENDING CHART -->
+
+    <div class="section">
+
+        <h2>
+            📊 Spending Overview
+        </h2>
+
+        <div class="chart-container">
+
+            <canvas
+                id="spendingChart">
+            </canvas>
+
         </div>
 
     </div>
 
-    <div class="section">
-        <h2>Budget Recommendation</h2>
-        <p id="budget">Loading...</p>
-    </div>
-
-    <div class="section">
-        <h2>Top Spending Category</h2>
-        <p id="category">Loading...</p>
-    </div>
 
 </div>
 
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    WealthIQ AI © 2026
+
+</footer>
+
+
+
 <script>
+
+
+/* ==========================================
+   LOAD DASHBOARD DATA
+========================================== */
+
 
 async function loadDashboard() {
 
@@ -130,42 +324,208 @@ async function loadDashboard() {
             "http://127.0.0.1:5000/dashboard"
         );
 
-        const data = await response.json();
 
-        document.getElementById("income").textContent =
-            "₹" + data.total_income.toLocaleString();
+        const data =
+            await response.json();
 
-        document.getElementById("expenses").textContent =
-            "₹" + data.total_expenses.toLocaleString();
 
-        document.getElementById("balance").textContent =
-            "₹" + data.balance.toLocaleString();
 
-        document.getElementById("forecast").textContent =
-            "₹" + data.predicted_spending.toLocaleString();
+        /* INCOME */
 
-        document.getElementById("budget").textContent =
+        document.getElementById(
+            "income"
+        ).textContent =
+            "₹" +
+            data.total_income.toLocaleString();
+
+
+
+        /* EXPENSES */
+
+        document.getElementById(
+            "expenses"
+        ).textContent =
+            "₹" +
+            data.total_expenses.toLocaleString();
+
+
+
+        /* BALANCE */
+
+        document.getElementById(
+            "balance"
+        ).textContent =
+            "₹" +
+            data.balance.toLocaleString();
+
+
+
+        /* FORECAST */
+
+        document.getElementById(
+            "forecast"
+        ).textContent =
+            "₹" +
+            data.predicted_spending.toLocaleString();
+
+
+
+        /* BUDGET */
+
+        document.getElementById(
+            "budget"
+        ).textContent =
+
             "Recommended Budget: ₹" +
-            data.recommended_budget.toLocaleString() +
+
+            data.recommended_budget
+                .toLocaleString() +
+
             " | Status: " +
+
             data.budget_status;
 
-        document.getElementById("category").textContent =
+
+
+        /* TOP CATEGORY */
+
+        document.getElementById(
+            "category"
+        ).textContent =
+
             data.top_category +
+
             " — ₹" +
-            data.top_category_amount.toLocaleString();
 
-    } catch (error) {
+            data.top_category_amount
+                .toLocaleString();
 
-        console.error("Unable to connect to WealthIQ API:", error);
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unable to connect to WealthIQ API:",
+            error
+        );
 
     }
 
 }
 
+
+
+/* ==========================================
+   LOAD SPENDING CHART
+========================================== */
+
+
+async function loadSpendingChart() {
+
+    try {
+
+
+        const response =
+            await fetch(
+                "http://127.0.0.1:5000/categories"
+            );
+
+
+        const data =
+            await response.json();
+
+
+
+        const ctx =
+            document
+                .getElementById(
+                    "spendingChart"
+                )
+                .getContext("2d");
+
+
+
+        new Chart(
+            ctx,
+            {
+
+                type: "doughnut",
+
+
+                data: {
+
+                    labels:
+                        data.categories,
+
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                "Spending",
+
+                            data:
+                                data.amounts
+
+                        }
+
+                    ]
+
+                },
+
+
+                options: {
+
+                    responsive: true,
+
+
+                    plugins: {
+
+                        legend: {
+
+                            position:
+                                "bottom"
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unable to load spending chart:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* ==========================================
+   START DASHBOARD
+========================================== */
+
+
 loadDashboard();
+
+loadSpendingChart();
+
 
 </script>
 
+
 </body>
+
 </html>
