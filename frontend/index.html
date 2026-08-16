@@ -293,6 +293,20 @@
 
     </div>
 
+    <div class="section">
+
+    <h2>
+        📈 Monthly Spending Trend
+    </h2>
+
+    <div class="chart-container">
+
+        <canvas id="monthlyChart"></canvas>
+
+    </div>
+
+</div>
+
 
 </div>
 
@@ -518,9 +532,70 @@ async function loadSpendingChart() {
 ========================================== */
 
 
+async function loadMonthlyChart() {
+
+    try {
+
+        const response = await fetch(
+            "http://127.0.0.1:5000/monthly-spending"
+        );
+
+        const data = await response.json();
+
+        const ctx = document
+            .getElementById("monthlyChart")
+            .getContext("2d");
+
+        new Chart(ctx, {
+
+            type: "line",
+
+            data: {
+
+                labels: data.months,
+
+                datasets: [{
+                    label: "Monthly Spending",
+                    data: data.amounts,
+                    tension: 0.3,
+                    fill: false
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                scales: {
+
+                    y: {
+                        beginAtZero: true
+                    }
+
+                }
+
+            }
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Unable to load monthly spending:",
+            error
+        );
+
+    }
+
+}
+
+
 loadDashboard();
 
 loadSpendingChart();
+
+loadMonthlyChart();
 
 
 </script>

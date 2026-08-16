@@ -144,5 +144,31 @@ def categories():
         "categories": category_spending.index.tolist(),
         "amounts": category_spending.values.astype(float).tolist()
     })
+@app.route("/monthly-spending")
+def monthly_spending():
+
+    df = pd.read_csv(DATA_FILE)
+
+    df["date"] = pd.to_datetime(df["date"])
+
+    expenses = df[df["type"] == "expense"].copy()
+
+    expenses["month"] = (
+        expenses["date"]
+        .dt.to_period("M")
+        .astype(str)
+    )
+
+    monthly = (
+        expenses
+        .groupby("month")["amount"]
+        .sum()
+        .sort_index()
+    )
+
+    return jsonify({
+        "months": monthly.index.tolist(),
+        "amounts": monthly.values.astype(float).tolist()
+    })
 if __name__ == "__main__":
     app.run(debug=True)
