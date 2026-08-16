@@ -170,5 +170,81 @@ def monthly_spending():
         "months": monthly.index.tolist(),
         "amounts": monthly.values.astype(float).tolist()
     })
+@app.route("/insights")
+def insights():
+
+    df = pd.read_csv(DATA_FILE)
+
+    expenses = df[df["type"] == "expense"].copy()
+
+    # Total spending
+    total_spending = float(expenses["amount"].sum())
+
+    # Top category
+    category_totals = (
+        expenses.groupby("category")["amount"]
+        .sum()
+        .sort_values(ascending=False)
+    )
+
+    top_category = category_totals.index[0]
+    top_amount = float(category_totals.iloc[0])
+
+    # Monthly spending
+    expenses["date"] = pd.to_datetime(expenses["date"])
+
+    expenses["month"] = (
+        expenses["date"]
+        .dt.to_period("M")
+        .astype(str)
+    )
+
+    monthly = (
+        expenses.groupby("month")["amount"]
+        .sum()
+        .sort_index()
+    )
+
+    # Spending trend
+    if len(monthly) >= 2:
+
+        previous_month = float(monthly.iloc[-2])
+        latest_month = float(monthly.iloc[-1])
+
+        if latest_month > previous_month:
+            trend = "increasing"
+        elif latest_month < previous_month:
+            trend = "decreasing"
+        else:
+            trend = "stable"
+
+    else:
+        trend = "not enough data"
+
+    # Generate insight
+    if trend == "increasing":
+        recommendation = (
+            "Your spending is increasing. "
+            "Consider reviewing your recent expenses."
+        )
+
+    elif trend == "decreasing":
+        recommendation = (
+            "Your spending is decreasing. "
+            "Keep maintaining your current spending habits."
+        )
+
+    else:
+        recommendation = (
+            "Your spending pattern is relatively stable."
+        )
+
+    return jsonify({
+        "total_spending": total_spending,
+        "top_category": top_category,
+        "top_category_amount": top_amount,
+        "spending_trend": trend,
+        "recommendation": recommendation
+    })
 if __name__ == "__main__":
     app.run(debug=True)

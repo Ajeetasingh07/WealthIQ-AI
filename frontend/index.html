@@ -7,7 +7,6 @@
 
     <title>WealthIQ AI | Finance Dashboard</title>
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -34,11 +33,12 @@
 
         header h1 {
             font-size: 32px;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
 
         header p {
             color: #cbd5e1;
+            font-size: 16px;
         }
 
         /* MAIN */
@@ -49,7 +49,7 @@
             padding: 35px;
         }
 
-        /* CARDS */
+        /* SUMMARY CARDS */
 
         .cards {
             display: grid;
@@ -91,12 +91,13 @@
 
         .section h2 {
             margin-bottom: 20px;
+            color: #172033;
         }
 
         /* CHART */
 
         .chart-container {
-            max-width: 600px;
+            max-width: 700px;
             margin: auto;
         }
 
@@ -112,6 +113,33 @@
         #category {
             font-size: 20px;
             font-weight: bold;
+        }
+
+        /* AI INSIGHTS */
+
+        #insights {
+            display: grid;
+            gap: 15px;
+        }
+
+        .insight-card {
+            background: #f8fafc;
+            padding: 18px;
+            border-radius: 12px;
+            border-left: 4px solid #172554;
+        }
+
+        .insight-card strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #172554;
+        }
+
+        .recommendation {
+            background: #eef2ff;
+            padding: 20px;
+            border-radius: 12px;
+            line-height: 1.6;
         }
 
         /* FOOTER */
@@ -148,6 +176,10 @@
 
             .value {
                 font-size: 24px;
+            }
+
+            .section {
+                padding: 20px;
             }
 
         }
@@ -191,7 +223,9 @@
             <div
                 class="value"
                 id="income">
+
                 Loading...
+
             </div>
 
         </div>
@@ -205,7 +239,9 @@
             <div
                 class="value"
                 id="expenses">
+
                 Loading...
+
             </div>
 
         </div>
@@ -219,7 +255,9 @@
             <div
                 class="value"
                 id="balance">
+
                 Loading...
+
             </div>
 
         </div>
@@ -233,7 +271,9 @@
             <div
                 class="value"
                 id="forecast">
+
                 Loading...
+
             </div>
 
         </div>
@@ -285,27 +325,49 @@
 
         <div class="chart-container">
 
-            <canvas
-                id="spendingChart">
-            </canvas>
+            <canvas id="spendingChart"></canvas>
 
         </div>
 
     </div>
 
+
+
+    <!-- MONTHLY CHART -->
+
     <div class="section">
 
-    <h2>
-        📈 Monthly Spending Trend
-    </h2>
+        <h2>
+            📈 Monthly Spending Trend
+        </h2>
 
-    <div class="chart-container">
+        <div class="chart-container">
 
-        <canvas id="monthlyChart"></canvas>
+            <canvas id="monthlyChart"></canvas>
+
+        </div>
 
     </div>
 
-</div>
+
+
+    <!-- AI INSIGHTS -->
+
+    <div class="section">
+
+        <h2>
+            🤖 WealthIQ AI Insights
+        </h2>
+
+        <div id="insights">
+
+            <p>
+                Loading financial insights...
+            </p>
+
+        </div>
+
+    </div>
 
 
 </div>
@@ -338,10 +400,7 @@ async function loadDashboard() {
             "http://127.0.0.1:5000/dashboard"
         );
 
-
-        const data =
-            await response.json();
-
+        const data = await response.json();
 
 
         /* INCOME */
@@ -350,7 +409,8 @@ async function loadDashboard() {
             "income"
         ).textContent =
             "₹" +
-            data.total_income.toLocaleString();
+            Number(data.total_income)
+                .toLocaleString();
 
 
 
@@ -360,7 +420,8 @@ async function loadDashboard() {
             "expenses"
         ).textContent =
             "₹" +
-            data.total_expenses.toLocaleString();
+            Number(data.total_expenses)
+                .toLocaleString();
 
 
 
@@ -370,7 +431,8 @@ async function loadDashboard() {
             "balance"
         ).textContent =
             "₹" +
-            data.balance.toLocaleString();
+            Number(data.balance)
+                .toLocaleString();
 
 
 
@@ -380,7 +442,8 @@ async function loadDashboard() {
             "forecast"
         ).textContent =
             "₹" +
-            data.predicted_spending.toLocaleString();
+            Number(data.predicted_spending)
+                .toLocaleString();
 
 
 
@@ -392,7 +455,7 @@ async function loadDashboard() {
 
             "Recommended Budget: ₹" +
 
-            data.recommended_budget
+            Number(data.recommended_budget)
                 .toLocaleString() +
 
             " | Status: " +
@@ -411,7 +474,7 @@ async function loadDashboard() {
 
             " — ₹" +
 
-            data.top_category_amount
+            Number(data.top_category_amount)
                 .toLocaleString();
 
 
@@ -439,77 +502,62 @@ async function loadSpendingChart() {
 
     try {
 
+        const response = await fetch(
+            "http://127.0.0.1:5000/categories"
+        );
 
-        const response =
-            await fetch(
-                "http://127.0.0.1:5000/categories"
+        const data = await response.json();
+
+
+        const canvas =
+            document.getElementById(
+                "spendingChart"
             );
 
 
-        const data =
-            await response.json();
-
-
-
         const ctx =
-            document
-                .getElementById(
-                    "spendingChart"
-                )
-                .getContext("2d");
+            canvas.getContext("2d");
 
 
+        new Chart(ctx, {
 
-        new Chart(
-            ctx,
-            {
+            type: "doughnut",
 
-                type: "doughnut",
+            data: {
 
+                labels:
+                    data.categories,
 
-                data: {
+                datasets: [{
 
-                    labels:
-                        data.categories,
+                    label:
+                        "Spending",
 
+                    data:
+                        data.amounts
 
-                    datasets: [
+                }]
 
-                        {
+            },
 
-                            label:
-                                "Spending",
+            options: {
 
-                            data:
-                                data.amounts
+                responsive: true,
 
-                        }
+                plugins: {
 
-                    ]
+                    legend: {
 
-                },
-
-
-                options: {
-
-                    responsive: true,
-
-
-                    plugins: {
-
-                        legend: {
-
-                            position:
-                                "bottom"
-
-                        }
+                        position:
+                            "bottom"
 
                     }
 
                 }
 
             }
-        );
+
+        });
 
 
     }
@@ -528,7 +576,7 @@ async function loadSpendingChart() {
 
 
 /* ==========================================
-   START DASHBOARD
+   LOAD MONTHLY SPENDING CHART
 ========================================== */
 
 
@@ -542,9 +590,14 @@ async function loadMonthlyChart() {
 
         const data = await response.json();
 
-        const ctx = document
-            .getElementById("monthlyChart")
-            .getContext("2d");
+
+        const ctx =
+            document
+                .getElementById(
+                    "monthlyChart"
+                )
+                .getContext("2d");
+
 
         new Chart(ctx, {
 
@@ -552,13 +605,23 @@ async function loadMonthlyChart() {
 
             data: {
 
-                labels: data.months,
+                labels:
+                    data.months,
 
                 datasets: [{
-                    label: "Monthly Spending",
-                    data: data.amounts,
-                    tension: 0.3,
-                    fill: false
+
+                    label:
+                        "Monthly Spending",
+
+                    data:
+                        data.amounts,
+
+                    tension:
+                        0.3,
+
+                    fill:
+                        false
+
                 }]
 
             },
@@ -570,7 +633,10 @@ async function loadMonthlyChart() {
                 scales: {
 
                     y: {
-                        beginAtZero: true
+
+                        beginAtZero:
+                            true
+
                     }
 
                 }
@@ -579,7 +645,10 @@ async function loadMonthlyChart() {
 
         });
 
-    } catch (error) {
+
+    }
+
+    catch (error) {
 
         console.error(
             "Unable to load monthly spending:",
@@ -591,11 +660,132 @@ async function loadMonthlyChart() {
 }
 
 
+
+/* ==========================================
+   LOAD AI FINANCIAL INSIGHTS
+========================================== */
+
+
+async function loadInsights() {
+
+    try {
+
+        const response = await fetch(
+            "http://127.0.0.1:5000/insights"
+        );
+
+        const data = await response.json();
+
+
+        document.getElementById(
+            "insights"
+        ).innerHTML = `
+
+            <div class="insight-card">
+
+                <strong>
+                    💰 Total Spending
+                </strong>
+
+                <span>
+                    ₹${Number(
+                        data.total_spending
+                    ).toLocaleString()}
+                </span>
+
+            </div>
+
+
+            <div class="insight-card">
+
+                <strong>
+                    🏷️ Highest Spending Category
+                </strong>
+
+                <span>
+                    ${data.top_category}
+                    — ₹${Number(
+                        data.top_category_amount
+                    ).toLocaleString()}
+                </span>
+
+            </div>
+
+
+            <div class="insight-card">
+
+                <strong>
+                    📈 Spending Trend
+                </strong>
+
+                <span>
+                    ${data.spending_trend}
+                </span>
+
+            </div>
+
+
+            <div class="recommendation">
+
+                <strong>
+                    🤖 AI Recommendation
+                </strong>
+
+                <p>
+                    ${data.recommendation}
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unable to load financial insights:",
+            error
+        );
+
+
+        document.getElementById(
+            "insights"
+        ).innerHTML = `
+
+            <div class="insight-card">
+
+                <strong>
+                    ⚠️ Unable to load insights
+                </strong>
+
+                <span>
+                    Make sure the Flask backend
+                    is running.
+                </span>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+/* ==========================================
+   START DASHBOARD
+========================================== */
+
+
 loadDashboard();
 
 loadSpendingChart();
 
 loadMonthlyChart();
+
+loadInsights();
 
 
 </script>
