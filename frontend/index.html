@@ -2,14 +2,25 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>WealthIQ AI | Finance Dashboard</title>
 
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
     <style>
+
+        /* =====================================================
+           GLOBAL
+        ===================================================== */
 
         * {
             box-sizing: border-box;
@@ -18,168 +29,386 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
             background: #f4f7fb;
+
             color: #172033;
+
         }
 
-        /* HEADER */
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
 
         header {
-            background: #172554;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #172554,
+                    #1e3a8a
+                );
+
             color: white;
-            padding: 30px 50px;
+
+            padding: 35px 50px;
+
         }
 
         header h1 {
-            font-size: 32px;
-            margin-bottom: 6px;
+
+            font-size: 34px;
+
+            margin-bottom: 8px;
+
         }
 
         header p {
+
             color: #cbd5e1;
+
             font-size: 16px;
+
         }
 
-        /* MAIN */
+
+        /* =====================================================
+           MAIN CONTAINER
+        ===================================================== */
 
         .container {
+
             max-width: 1300px;
+
             margin: auto;
+
             padding: 35px;
+
         }
 
-        /* SUMMARY CARDS */
+
+        /* =====================================================
+           SUMMARY CARDS
+        ===================================================== */
 
         .cards {
+
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
             gap: 20px;
+
         }
 
         .card {
+
             background: white;
+
             padding: 25px;
+
             border-radius: 16px;
 
             box-shadow:
-                0 5px 20px rgba(0, 0, 0, 0.07);
+                0 5px 20px
+                rgba(0, 0, 0, 0.07);
+
+            transition:
+                transform 0.2s ease;
+
+        }
+
+        .card:hover {
+
+            transform:
+                translateY(-4px);
+
         }
 
         .card h3 {
+
             color: #64748b;
-            font-size: 15px;
+
+            font-size: 14px;
+
             margin-bottom: 12px;
+
         }
 
         .value {
+
             font-size: 28px;
+
             font-weight: bold;
+
+            color: #172554;
+
         }
 
-        /* SECTIONS */
+
+        /* =====================================================
+           SECTIONS
+        ===================================================== */
 
         .section {
+
             background: white;
+
             margin-top: 30px;
+
             padding: 30px;
+
             border-radius: 16px;
 
             box-shadow:
-                0 5px 20px rgba(0, 0, 0, 0.07);
+                0 5px 20px
+                rgba(0, 0, 0, 0.07);
+
         }
 
         .section h2 {
+
             margin-bottom: 20px;
+
             color: #172033;
+
         }
 
-        /* CHART */
 
-        .chart-container {
-            max-width: 700px;
-            margin: auto;
-        }
-
-        /* BUDGET */
+        /* =====================================================
+           BUDGET
+        ===================================================== */
 
         #budget {
+
             font-size: 18px;
+
             line-height: 1.7;
+
+            color: #475569;
+
         }
 
-        /* CATEGORY */
+
+        /* =====================================================
+           TOP CATEGORY
+        ===================================================== */
 
         #category {
+
             font-size: 20px;
+
             font-weight: bold;
+
+            color: #1e3a8a;
+
         }
 
-        /* AI INSIGHTS */
 
-        #insights {
-            display: grid;
-            gap: 15px;
+        /* =====================================================
+           CHARTS
+        ===================================================== */
+
+        .chart-container {
+
+            max-width: 650px;
+
+            height: 350px;
+
+            margin: auto;
+
+            position: relative;
+
         }
 
-        .insight-card {
+
+        /* =====================================================
+           AI INSIGHTS
+        ===================================================== */
+
+        .insight-box {
+
             background: #f8fafc;
-            padding: 18px;
-            border-radius: 12px;
-            border-left: 4px solid #172554;
-        }
 
-        .insight-card strong {
-            display: block;
-            margin-bottom: 6px;
-            color: #172554;
-        }
+            border-left:
+                5px solid #2563eb;
 
-        .recommendation {
-            background: #eef2ff;
             padding: 20px;
-            border-radius: 12px;
-            line-height: 1.6;
+
+            border-radius: 10px;
+
+            line-height: 1.7;
+
         }
 
-        /* FOOTER */
+        .insight-item {
+
+            margin-bottom: 12px;
+
+        }
+
+        .insight-label {
+
+            font-weight: bold;
+
+            color: #334155;
+
+        }
+
+
+        /* =====================================================
+           TRANSACTIONS TABLE
+        ===================================================== */
+
+        .table-container {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+        }
+
+        table {
+
+            width: 100%;
+
+            border-collapse:
+                collapse;
+
+        }
+
+        th {
+
+            background: #f8fafc;
+
+            color: #475569;
+
+            font-size: 14px;
+
+            text-align: left;
+
+            padding: 15px;
+
+            border-bottom:
+                2px solid #e2e8f0;
+
+        }
+
+        td {
+
+            padding: 15px;
+
+            font-size: 14px;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+        }
+
+        tr:hover {
+
+            background: #f8fafc;
+
+        }
+
+        .transaction-income {
+
+            color: #15803d;
+
+            font-weight: bold;
+
+        }
+
+        .transaction-expense {
+
+            color: #dc2626;
+
+            font-weight: bold;
+
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
 
         footer {
+
             text-align: center;
+
             padding: 30px;
+
             color: #64748b;
+
         }
 
-        /* RESPONSIVE */
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
 
         @media (max-width: 1000px) {
 
             .cards {
-                grid-template-columns: repeat(2, 1fr);
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
             }
 
         }
 
+
         @media (max-width: 600px) {
 
             header {
+
                 padding: 25px;
+
+            }
+
+            header h1 {
+
+                font-size: 28px;
+
             }
 
             .container {
+
                 padding: 20px;
+
             }
 
             .cards {
-                grid-template-columns: 1fr;
+
+                grid-template-columns:
+                    1fr;
+
             }
 
             .value {
+
                 font-size: 24px;
+
             }
 
             .section {
+
                 padding: 20px;
+
+            }
+
+            .chart-container {
+
+                height: 280px;
+
             }
 
         }
@@ -192,26 +421,32 @@
 <body>
 
 
-<!-- HEADER -->
+<!-- =========================================================
+     HEADER
+========================================================= -->
 
 <header>
 
     <h1>WealthIQ AI</h1>
 
     <p>
-        AI-Powered Personal Finance Management & Predictive Budgeting
+        AI-Powered Personal Finance Management &
+        Predictive Budgeting
     </p>
 
 </header>
 
 
-
-<!-- MAIN CONTENT -->
+<!-- =========================================================
+     MAIN
+========================================================= -->
 
 <div class="container">
 
 
-    <!-- SUMMARY CARDS -->
+    <!-- =====================================================
+         SUMMARY CARDS
+    ====================================================== -->
 
     <div class="cards">
 
@@ -222,14 +457,12 @@
 
             <div
                 class="value"
-                id="income">
-
+                id="income"
+            >
                 Loading...
-
             </div>
 
         </div>
-
 
 
         <div class="card">
@@ -238,14 +471,12 @@
 
             <div
                 class="value"
-                id="expenses">
-
+                id="expenses"
+            >
                 Loading...
-
             </div>
 
         </div>
-
 
 
         <div class="card">
@@ -254,14 +485,12 @@
 
             <div
                 class="value"
-                id="balance">
-
+                id="balance"
+            >
                 Loading...
-
             </div>
 
         </div>
-
 
 
         <div class="card">
@@ -270,10 +499,9 @@
 
             <div
                 class="value"
-                id="forecast">
-
+                id="forecast"
+            >
                 Loading...
-
             </div>
 
         </div>
@@ -282,8 +510,9 @@
     </div>
 
 
-
-    <!-- BUDGET -->
+    <!-- =====================================================
+         BUDGET
+    ====================================================== -->
 
     <div class="section">
 
@@ -298,8 +527,9 @@
     </div>
 
 
-
-    <!-- TOP CATEGORY -->
+    <!-- =====================================================
+         TOP CATEGORY
+    ====================================================== -->
 
     <div class="section">
 
@@ -314,26 +544,30 @@
     </div>
 
 
-
-    <!-- SPENDING CHART -->
+    <!-- =====================================================
+         CATEGORY CHART
+    ====================================================== -->
 
     <div class="section">
 
         <h2>
-            📊 Spending Overview
+            📊 Spending by Category
         </h2>
 
         <div class="chart-container">
 
-            <canvas id="spendingChart"></canvas>
+            <canvas
+                id="spendingChart"
+            ></canvas>
 
         </div>
 
     </div>
 
 
-
-    <!-- MONTHLY CHART -->
+    <!-- =====================================================
+         MONTHLY CHART
+    ====================================================== -->
 
     <div class="section">
 
@@ -343,15 +577,18 @@
 
         <div class="chart-container">
 
-            <canvas id="monthlyChart"></canvas>
+            <canvas
+                id="monthlyChart"
+            ></canvas>
 
         </div>
 
     </div>
 
 
-
-    <!-- AI INSIGHTS -->
+    <!-- =====================================================
+         AI INSIGHTS
+    ====================================================== -->
 
     <div class="section">
 
@@ -359,11 +596,66 @@
             🤖 WealthIQ AI Insights
         </h2>
 
-        <div id="insights">
+        <div
+            class="insight-box"
+            id="insights"
+        >
 
-            <p>
-                Loading financial insights...
-            </p>
+            Loading financial insights...
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT TRANSACTIONS
+    ====================================================== -->
+
+    <div class="section">
+
+        <h2>
+            💳 Recent Transactions
+        </h2>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Date</th>
+
+                        <th>Merchant</th>
+
+                        <th>Category</th>
+
+                        <th>Type</th>
+
+                        <th>Amount</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody
+                    id="transactionsTable"
+                >
+
+                    <tr>
+
+                        <td colspan="5">
+                            Loading transactions...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
 
         </div>
 
@@ -373,8 +665,9 @@
 </div>
 
 
-
-<!-- FOOTER -->
+<!-- =========================================================
+     FOOTER
+========================================================= -->
 
 <footer>
 
@@ -383,24 +676,36 @@
 </footer>
 
 
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
 
 <script>
 
 
-/* ==========================================
-   LOAD DASHBOARD DATA
-========================================== */
+/* ============================================================
+   API BASE URL
+============================================================ */
 
+const API_URL =
+    "http://127.0.0.1:5000";
+
+
+/* ============================================================
+   LOAD DASHBOARD
+============================================================ */
 
 async function loadDashboard() {
 
     try {
 
-        const response = await fetch(
-            "http://127.0.0.1:5000/dashboard"
-        );
+        const response =
+            await fetch(
+                API_URL + "/dashboard"
+            );
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
 
         /* INCOME */
@@ -408,10 +713,12 @@ async function loadDashboard() {
         document.getElementById(
             "income"
         ).textContent =
-            "₹" +
-            Number(data.total_income)
-                .toLocaleString();
 
+            "₹" +
+
+            Number(
+                data.total_income
+            ).toLocaleString();
 
 
         /* EXPENSES */
@@ -419,10 +726,12 @@ async function loadDashboard() {
         document.getElementById(
             "expenses"
         ).textContent =
-            "₹" +
-            Number(data.total_expenses)
-                .toLocaleString();
 
+            "₹" +
+
+            Number(
+                data.total_expenses
+            ).toLocaleString();
 
 
         /* BALANCE */
@@ -430,10 +739,12 @@ async function loadDashboard() {
         document.getElementById(
             "balance"
         ).textContent =
-            "₹" +
-            Number(data.balance)
-                .toLocaleString();
 
+            "₹" +
+
+            Number(
+                data.balance
+            ).toLocaleString();
 
 
         /* FORECAST */
@@ -441,10 +752,12 @@ async function loadDashboard() {
         document.getElementById(
             "forecast"
         ).textContent =
-            "₹" +
-            Number(data.predicted_spending)
-                .toLocaleString();
 
+            "₹" +
+
+            Number(
+                data.predicted_spending
+            ).toLocaleString();
 
 
         /* BUDGET */
@@ -455,13 +768,13 @@ async function loadDashboard() {
 
             "Recommended Budget: ₹" +
 
-            Number(data.recommended_budget)
-                .toLocaleString() +
+            Number(
+                data.recommended_budget
+            ).toLocaleString() +
 
             " | Status: " +
 
             data.budget_status;
-
 
 
         /* TOP CATEGORY */
@@ -474,16 +787,16 @@ async function loadDashboard() {
 
             " — ₹" +
 
-            Number(data.top_category_amount)
-                .toLocaleString();
-
+            Number(
+                data.top_category_amount
+            ).toLocaleString();
 
     }
 
     catch (error) {
 
         console.error(
-            "Unable to connect to WealthIQ API:",
+            "Dashboard error:",
             error
         );
 
@@ -492,21 +805,21 @@ async function loadDashboard() {
 }
 
 
-
-/* ==========================================
-   LOAD SPENDING CHART
-========================================== */
-
+/* ============================================================
+   CATEGORY CHART
+============================================================ */
 
 async function loadSpendingChart() {
 
     try {
 
-        const response = await fetch(
-            "http://127.0.0.1:5000/categories"
-        );
+        const response =
+            await fetch(
+                API_URL + "/categories"
+            );
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
 
         const canvas =
@@ -519,53 +832,62 @@ async function loadSpendingChart() {
             canvas.getContext("2d");
 
 
-        new Chart(ctx, {
+        new Chart(
+            ctx,
+            {
 
-            type: "doughnut",
+                type: "doughnut",
 
-            data: {
+                data: {
 
-                labels:
-                    data.categories,
+                    labels:
+                        data.categories,
 
-                datasets: [{
+                    datasets: [
 
-                    label:
-                        "Spending",
+                        {
 
-                    data:
-                        data.amounts
+                            label:
+                                "Spending",
 
-                }]
+                            data:
+                                data.amounts
 
-            },
+                        }
 
-            options: {
+                    ]
 
-                responsive: true,
+                },
 
-                plugins: {
+                options: {
 
-                    legend: {
+                    responsive: true,
 
-                        position:
-                            "bottom"
+                    maintainAspectRatio:
+                        false,
+
+                    plugins: {
+
+                        legend: {
+
+                            position:
+                                "bottom"
+
+                        }
 
                     }
 
                 }
 
             }
-
-        });
-
+        );
 
     }
 
     catch (error) {
 
         console.error(
-            "Unable to load spending chart:",
+            "Category chart error:",
             error
         );
 
@@ -574,84 +896,96 @@ async function loadSpendingChart() {
 }
 
 
-
-/* ==========================================
-   LOAD MONTHLY SPENDING CHART
-========================================== */
-
+/* ============================================================
+   MONTHLY SPENDING CHART
+============================================================ */
 
 async function loadMonthlyChart() {
 
     try {
 
-        const response = await fetch(
-            "http://127.0.0.1:5000/monthly-spending"
-        );
+        const response =
+            await fetch(
+                API_URL +
+                "/monthly-spending"
+            );
 
-        const data = await response.json();
+        const data =
+            await response.json();
+
+
+        const canvas =
+            document.getElementById(
+                "monthlyChart"
+            );
 
 
         const ctx =
-            document
-                .getElementById(
-                    "monthlyChart"
-                )
-                .getContext("2d");
+            canvas.getContext("2d");
 
 
-        new Chart(ctx, {
+        new Chart(
+            ctx,
+            {
 
-            type: "line",
+                type: "line",
 
-            data: {
+                data: {
 
-                labels:
-                    data.months,
+                    labels:
+                        data.months,
 
-                datasets: [{
+                    datasets: [
 
-                    label:
-                        "Monthly Spending",
+                        {
 
-                    data:
-                        data.amounts,
+                            label:
+                                "Monthly Spending",
 
-                    tension:
-                        0.3,
+                            data:
+                                data.amounts,
 
-                    fill:
-                        false
+                            tension:
+                                0.3,
 
-                }]
+                            fill:
+                                false
 
-            },
+                        }
 
-            options: {
+                    ]
 
-                responsive: true,
+                },
 
-                scales: {
+                options: {
 
-                    y: {
+                    responsive: true,
 
-                        beginAtZero:
-                            true
+                    maintainAspectRatio:
+                        false,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero:
+                                true
+
+                        }
 
                     }
 
                 }
 
             }
-
-        });
-
+        );
 
     }
 
     catch (error) {
 
         console.error(
-            "Unable to load monthly spending:",
+            "Monthly chart error:",
             error
         );
 
@@ -660,80 +994,73 @@ async function loadMonthlyChart() {
 }
 
 
-
-/* ==========================================
-   LOAD AI FINANCIAL INSIGHTS
-========================================== */
-
+/* ============================================================
+   AI INSIGHTS
+============================================================ */
 
 async function loadInsights() {
 
     try {
 
-        const response = await fetch(
-            "http://127.0.0.1:5000/insights"
-        );
+        const response =
+            await fetch(
+                API_URL + "/insights"
+            );
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
 
         document.getElementById(
             "insights"
         ).innerHTML = `
 
-            <div class="insight-card">
+            <div class="insight-item">
 
-                <strong>
-                    💰 Total Spending
-                </strong>
-
-                <span>
-                    ₹${Number(
-                        data.total_spending
-                    ).toLocaleString()}
+                <span class="insight-label">
+                    Total Spending:
                 </span>
+
+                ₹${Number(
+                    data.total_spending
+                ).toLocaleString()}
 
             </div>
 
 
-            <div class="insight-card">
+            <div class="insight-item">
 
-                <strong>
-                    🏷️ Highest Spending Category
-                </strong>
-
-                <span>
-                    ${data.top_category}
-                    — ₹${Number(
-                        data.top_category_amount
-                    ).toLocaleString()}
+                <span class="insight-label">
+                    Top Category:
                 </span>
+
+                ${data.top_category}
+
+                — ₹${Number(
+                    data.top_category_amount
+                ).toLocaleString()}
 
             </div>
 
 
-            <div class="insight-card">
+            <div class="insight-item">
 
-                <strong>
-                    📈 Spending Trend
-                </strong>
-
-                <span>
-                    ${data.spending_trend}
+                <span class="insight-label">
+                    Spending Trend:
                 </span>
+
+                ${data.spending_trend}
 
             </div>
 
 
-            <div class="recommendation">
+            <div class="insight-item">
 
-                <strong>
-                    🤖 AI Recommendation
-                </strong>
+                <span class="insight-label">
+                    AI Recommendation:
+                </span>
 
-                <p>
-                    ${data.recommendation}
-                </p>
+                ${data.recommendation}
 
             </div>
 
@@ -744,27 +1071,152 @@ async function loadInsights() {
     catch (error) {
 
         console.error(
-            "Unable to load financial insights:",
+            "Insights error:",
             error
         );
 
 
         document.getElementById(
             "insights"
+        ).textContent =
+            "Unable to load insights.";
+
+    }
+
+}
+
+
+/* ============================================================
+   RECENT TRANSACTIONS
+============================================================ */
+
+async function loadTransactions() {
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL +
+                "/transactions"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        const table =
+            document.getElementById(
+                "transactionsTable"
+            );
+
+
+        table.innerHTML = "";
+
+
+        if (
+            !data.transactions ||
+            data.transactions.length === 0
+        ) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td colspan="5">
+                        No transactions found.
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        data.transactions.forEach(
+            transaction => {
+
+
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                const typeClass =
+
+                    transaction.type
+                    .toLowerCase() === "income"
+
+                    ? "transaction-income"
+
+                    : "transaction-expense";
+
+
+                row.innerHTML = `
+
+                    <td>
+                        ${transaction.date}
+                    </td>
+
+
+                    <td>
+                        ${transaction.merchant}
+                    </td>
+
+
+                    <td>
+                        ${transaction.category}
+                    </td>
+
+
+                    <td
+                        class="${typeClass}"
+                    >
+                        ${transaction.type}
+                    </td>
+
+
+                    <td>
+                        ₹${Number(
+                            transaction.amount
+                        ).toLocaleString()}
+                    </td>
+
+                `;
+
+
+                table.appendChild(
+                    row
+                );
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Transactions error:",
+            error
+        );
+
+
+        document.getElementById(
+            "transactionsTable"
         ).innerHTML = `
 
-            <div class="insight-card">
+            <tr>
 
-                <strong>
-                    ⚠️ Unable to load insights
-                </strong>
+                <td colspan="5">
+                    Unable to load transactions.
+                </td>
 
-                <span>
-                    Make sure the Flask backend
-                    is running.
-                </span>
-
-            </div>
+            </tr>
 
         `;
 
@@ -773,11 +1225,9 @@ async function loadInsights() {
 }
 
 
-
-/* ==========================================
+/* ============================================================
    START DASHBOARD
-========================================== */
-
+============================================================ */
 
 loadDashboard();
 
@@ -786,6 +1236,8 @@ loadSpendingChart();
 loadMonthlyChart();
 
 loadInsights();
+
+loadTransactions();
 
 
 </script>
