@@ -1,22 +1,28 @@
-from flask import Flask, jsonify
-from flask_cors import CORS
-import pandas as pd
 import os
+import pandas as pd
+
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 
 # ============================================================
-# APP CONFIGURATION
+# FLASK APP
 # ============================================================
 
 app = Flask(__name__)
+
 CORS(app)
 
 
 # ============================================================
-# DATA FILE
+# FILE PATH
 # ============================================================
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(
+    os.path.dirname(
+        os.path.abspath(__file__)
+    )
+)
 
 DATA_FILE = os.path.join(
     BASE_DIR,
@@ -26,11 +32,69 @@ DATA_FILE = os.path.join(
 
 
 # ============================================================
+# CATEGORY FUNCTION
+# ============================================================
+
+def get_category(merchant):
+
+    merchant = str(merchant).lower().strip()
+
+    if merchant in [
+        "swiggy",
+        "zomato",
+        "dominos"
+    ]:
+        return "Food"
+
+    elif merchant in [
+        "amazon",
+        "flipkart",
+        "myntra"
+    ]:
+        return "Shopping"
+
+    elif merchant in [
+        "uber",
+        "ola"
+    ]:
+        return "Transport"
+
+    elif merchant in [
+        "netflix",
+        "spotify"
+    ]:
+        return "Entertainment"
+
+    elif merchant in [
+        "electricity",
+        "water",
+        "gas"
+    ]:
+        return "Bills"
+
+    elif merchant in [
+        "rent",
+        "housing"
+    ]:
+        return "Housing"
+
+    elif merchant == "salary":
+
+        return "Income"
+
+    else:
+
+        return "Other"
+
+
+# ============================================================
 # LOAD DATA
 # ============================================================
+
 def load_data():
 
     if not os.path.exists(DATA_FILE):
+
         raise FileNotFoundError(
             f"Dataset not found: {DATA_FILE}"
         )
@@ -38,58 +102,42 @@ def load_data():
     df = pd.read_csv(DATA_FILE)
 
     # Clean column names
-    df.columns = df.columns.str.strip()
 
-    # Automatically create category
-    # if the dataset does not contain one
+    df.columns = (
+        df.columns
+        .str.strip()
+        .str.lower()
+    )
+
+    # Make sure category exists
+
     if "category" not in df.columns:
 
-        def assign_category(merchant):
-
-            merchant = str(merchant).lower()
-
-            if merchant in ["swiggy", "zomato", "dominos"]:
-                return "Food"
-
-            elif merchant in ["amazon", "flipkart", "myntra"]:
-                return "Shopping"
-
-            elif merchant in ["uber", "ola"]:
-                return "Transport"
-
-            elif merchant in ["netflix", "spotify"]:
-                return "Entertainment"
-
-            elif merchant in ["electricity", "water", "gas"]:
-                return "Bills"
-
-            elif merchant in ["rent", "housing"]:
-                return "Housing"
-
-            elif merchant == "salary":
-                return "Income"
-
-            else:
-                return "Other"
-
-        df["category"] = df["merchant"].apply(
-            assign_category
-        )
+        df["category"] = df[
+            "merchant"
+        ].apply(get_category)
 
     return df
 
 
 # ============================================================
-# HOME / HEALTH CHECK
+# HOME API
 # ============================================================
 
 @app.route("/")
 def home():
 
     return jsonify({
-        "message": "WealthIQ AI backend is working!",
-        "project": "WealthIQ AI",
-        "status": "running"
+
+        "message":
+            "WealthIQ AI backend is working!",
+
+        "project":
+            "WealthIQ AI",
+
+        "status":
+            "running"
+
     })
 
 
@@ -100,188 +148,180 @@ def home():
 @app.route("/dashboard")
 def dashboard():
 
-    df = load_data()
+    try:
 
-    # Separate income and expenses
-    income_df = df[df["type"] == "income"]
+        df = load_data()
 
-    expense_df = df[df["type"] == "expense"]
+        # Convert amount to numeric
 
-    # Total income
-    total_income = float(
-        income_df["amount"].sum()
-    )
-
-    # Total expenses
-    total_expenses = float(
-        expense_df["amount"].sum()
-    )
-
-    # Balance
-    balance = float(
-        total_income - total_expenses
-    )
-
-    # --------------------------------------------------------
-    # Top category
-    # --------------------------------------------------------
-
-    if len(expense_df) > 0:
-
-        category_totals = (
-            expense_df
-            .groupby("category")["amount"]
-            .sum()
-            .sort_values(ascending=False)
+        df["amount"] = pd.to_numeric(
+            df["amount"],
+            errors="coerce"
         )
 
-        top_category = str(
-            category_totals.index[0]
-        )
+        # Income
 
-        top_category_amount = float(
-            category_totals.iloc[0]
-        )
+        income = df[
+            df["type"].str.lower() == "income"
+        ]["amount"].sum()
 
-    else:
+        # Expenses
 
-        top_category = "None"
-        top_category_amount = 0.0
+        expenses = df[
+            df["type"].str.lower() == "expense"
+        ]["amount"].sum()
 
+        # Balance
 
-    # --------------------------------------------------------
-    # Predicted spending
-    # --------------------------------------------------------
+        balance = income - expenses
 
-    df["date"] = pd.to_datetime(df["date"])
+        # Simple predicted spending
 
-    expense_df = df[
-        df["type"] == "expense"
-    ].copy()
+        expense_df = df[
+            df["type"].str.lower() == "expense"
+        ]
 
-    if len(expense_df) > 0:
+        if len(expense_df) > 0:
 
-        expense_df["month"] = (
-            expense_df["date"]
-            .dt.to_period("M")
-            .astype(str)
-        )
-
-        monthly_spending = (
-            expense_df
-            .groupby("month")["amount"]
-            .sum()
-            .sort_index()
-        )
-
-        if len(monthly_spending) >= 3:
-
-            predicted_spending = float(
-                monthly_spending
-                .tail(3)
-                .mean()
-            )
-
-        elif len(monthly_spending) > 0:
-
-            predicted_spending = float(
-                monthly_spending.mean()
+            predicted_spending = (
+                expense_df["amount"]
+                .mean() *
+                min(len(expense_df), 30)
             )
 
         else:
 
-            predicted_spending = 0.0
+            predicted_spending = 0
 
-    else:
+        # Recommended budget
 
-        predicted_spending = 0.0
+        recommended_budget = (
+            predicted_spending * 1.10
+        )
 
+        if expenses <= recommended_budget:
 
-    # --------------------------------------------------------
-    # Recommended budget
-    # --------------------------------------------------------
+            budget_status = "Within Budget"
 
-    recommended_budget = float(
-        predicted_spending * 1.10
-    )
+        else:
 
+            budget_status = "Over Budget"
 
-    # --------------------------------------------------------
-    # Budget status
-    # --------------------------------------------------------
+        # Top category
 
-    if balance >= recommended_budget:
+        category_df = expense_df.groupby(
+            "category"
+        )["amount"].sum()
 
-        budget_status = "Healthy"
+        if len(category_df) > 0:
 
-    elif balance >= 0:
+            top_category = (
+                category_df
+                .idxmax()
+            )
 
-        budget_status = "Needs Attention"
+            top_category_amount = (
+                category_df
+                .max()
+            )
 
-    else:
+        else:
 
-        budget_status = "Overspending"
+            top_category = "None"
 
+            top_category_amount = 0
 
-    # --------------------------------------------------------
-    # JSON response
-    # --------------------------------------------------------
+        return jsonify({
 
-    return jsonify({
+            "total_income":
+                float(income),
 
-        "total_income": total_income,
+            "total_expenses":
+                float(expenses),
 
-        "total_expenses": total_expenses,
+            "balance":
+                float(balance),
 
-        "balance": balance,
+            "predicted_spending":
+                float(predicted_spending),
 
-        "predicted_spending": predicted_spending,
+            "recommended_budget":
+                float(recommended_budget),
 
-        "recommended_budget": recommended_budget,
+            "budget_status":
+                budget_status,
 
-        "budget_status": budget_status,
+            "top_category":
+                str(top_category),
 
-        "top_category": top_category,
+            "top_category_amount":
+                float(top_category_amount)
 
-        "top_category_amount": top_category_amount
+        })
 
-    })
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+                "Unable to load dashboard",
+
+            "message":
+                str(e)
+
+        }), 500
 
 
 # ============================================================
-# CATEGORY SPENDING API
+# CATEGORY API
 # ============================================================
 
 @app.route("/categories")
 def categories():
 
-    df = load_data()
+    try:
 
-    expenses = df[
-        df["type"] == "expense"
-    ]
+        df = load_data()
 
-    category_spending = (
-        expenses
-        .groupby("category")["amount"]
-        .sum()
-        .sort_values(ascending=False)
-    )
+        expense_df = df[
+            df["type"].str.lower() == "expense"
+        ]
 
-    return jsonify({
+        category_data = (
+            expense_df
+            .groupby("category")["amount"]
+            .sum()
+            .sort_values(
+                ascending=False
+            )
+        )
 
-        "categories":
-            category_spending
-            .index
-            .tolist(),
+        return jsonify({
 
-        "amounts":
-            category_spending
-            .values
-            .astype(float)
-            .tolist()
+            "categories":
+                category_data
+                .index
+                .astype(str)
+                .tolist(),
 
-    })
+            "amounts":
+                category_data
+                .astype(float)
+                .tolist()
+
+        })
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+                "Unable to load categories",
+
+            "message":
+                str(e)
+
+        }), 500
 
 
 # ============================================================
@@ -291,203 +331,207 @@ def categories():
 @app.route("/monthly-spending")
 def monthly_spending():
 
-    df = load_data()
+    try:
 
-    df["date"] = pd.to_datetime(
-        df["date"]
-    )
+        df = load_data()
 
-    expenses = df[
-        df["type"] == "expense"
-    ].copy()
+        df["date"] = pd.to_datetime(
+            df["date"],
+            errors="coerce"
+        )
 
-    expenses["month"] = (
-        expenses["date"]
-        .dt.to_period("M")
-        .astype(str)
-    )
+        df["amount"] = pd.to_numeric(
+            df["amount"],
+            errors="coerce"
+        )
 
-    monthly = (
-        expenses
-        .groupby("month")["amount"]
-        .sum()
-        .sort_index()
-    )
+        expense_df = df[
+            df["type"].str.lower() == "expense"
+        ].copy()
 
-    return jsonify({
+        expense_df["month"] = (
+            expense_df["date"]
+            .dt.to_period("M")
+            .astype(str)
+        )
 
-        "months":
-            monthly
-            .index
-            .tolist(),
+        monthly = (
+            expense_df
+            .groupby("month")["amount"]
+            .sum()
+            .sort_index()
+        )
 
-        "amounts":
-            monthly
-            .values
-            .astype(float)
-            .tolist()
+        return jsonify({
 
-    })
+            "months":
+                monthly
+                .index
+                .astype(str)
+                .tolist(),
+
+            "amounts":
+                monthly
+                .astype(float)
+                .tolist()
+
+        })
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+                "Unable to load monthly spending",
+
+            "message":
+                str(e)
+
+        }), 500
 
 
 # ============================================================
-# AI FINANCIAL INSIGHTS API
+# INSIGHTS API
 # ============================================================
 
 @app.route("/insights")
 def insights():
 
-    df = load_data()
+    try:
 
-    expenses = df[
-        df["type"] == "expense"
-    ].copy()
+        df = load_data()
 
-    # --------------------------------------------------------
-    # Total spending
-    # --------------------------------------------------------
+        df["amount"] = pd.to_numeric(
+            df["amount"],
+            errors="coerce"
+        )
 
-    total_spending = float(
-        expenses["amount"].sum()
-    )
+        expense_df = df[
+            df["type"].str.lower() == "expense"
+        ]
 
+        total_spending = (
+            expense_df["amount"].sum()
+        )
 
-    # --------------------------------------------------------
-    # Top category
-    # --------------------------------------------------------
-
-    if len(expenses) > 0:
-
-        category_totals = (
-            expenses
+        category_data = (
+            expense_df
             .groupby("category")["amount"]
             .sum()
-            .sort_values(ascending=False)
+            .sort_values(
+                ascending=False
+            )
         )
 
-        top_category = str(
-            category_totals.index[0]
-        )
+        if len(category_data) > 0:
 
-        top_category_amount = float(
-            category_totals.iloc[0]
-        )
+            top_category = (
+                category_data
+                .index[0]
+            )
 
-    else:
-
-        top_category = "None"
-        top_category_amount = 0.0
-
-
-    # --------------------------------------------------------
-    # Monthly spending
-    # --------------------------------------------------------
-
-    df["date"] = pd.to_datetime(
-        df["date"]
-    )
-
-    expenses["date"] = pd.to_datetime(
-        expenses["date"]
-    )
-
-    expenses["month"] = (
-        expenses["date"]
-        .dt.to_period("M")
-        .astype(str)
-    )
-
-    monthly = (
-        expenses
-        .groupby("month")["amount"]
-        .sum()
-        .sort_index()
-    )
-
-
-    # --------------------------------------------------------
-    # Spending trend
-    # --------------------------------------------------------
-
-    if len(monthly) >= 2:
-
-        previous_month = float(
-            monthly.iloc[-2]
-        )
-
-        latest_month = float(
-            monthly.iloc[-1]
-        )
-
-        if latest_month > previous_month:
-
-            spending_trend = "Increasing"
-
-        elif latest_month < previous_month:
-
-            spending_trend = "Decreasing"
+            top_category_amount = (
+                category_data
+                .iloc[0]
+            )
 
         else:
 
-            spending_trend = "Stable"
+            top_category = "None"
 
-    else:
+            top_category_amount = 0
 
-        spending_trend = "Not enough data"
+        # Simple spending trend
 
+        if len(expense_df) >= 2:
 
-    # --------------------------------------------------------
-    # AI-style recommendation
-    # --------------------------------------------------------
+            first_half = (
+                expense_df["amount"]
+                .iloc[:len(expense_df)//2]
+                .sum()
+            )
 
-    if spending_trend == "Increasing":
+            second_half = (
+                expense_df["amount"]
+                .iloc[len(expense_df)//2:]
+                .sum()
+            )
 
-        recommendation = (
-            "Your spending is increasing. "
-            "Consider reviewing your recent expenses "
-            "and reducing non-essential spending."
-        )
+            if second_half > first_half:
 
-    elif spending_trend == "Decreasing":
+                spending_trend = (
+                    "Spending is increasing"
+                )
 
-        recommendation = (
-            "Your spending is decreasing. "
-            "Keep maintaining your current spending habits."
-        )
+                recommendation = (
+                    "Consider reducing "
+                    "non-essential spending."
+                )
 
-    elif spending_trend == "Stable":
+            elif second_half < first_half:
 
-        recommendation = (
-            "Your spending pattern is relatively stable. "
-            "Continue monitoring your expenses."
-        )
+                spending_trend = (
+                    "Spending is decreasing"
+                )
 
-    else:
+                recommendation = (
+                    "Good progress! "
+                    "Continue maintaining "
+                    "your spending habits."
+                )
 
-        recommendation = (
-            "More transaction history is required "
-            "to generate a reliable spending trend."
-        )
+            else:
 
+                spending_trend = (
+                    "Spending is stable"
+                )
 
-    return jsonify({
+                recommendation = (
+                    "Your spending is "
+                    "relatively stable."
+                )
 
-        "total_spending":
-            total_spending,
+        else:
 
-        "top_category":
-            top_category,
+            spending_trend = (
+                "Not enough data"
+            )
 
-        "top_category_amount":
-            top_category_amount,
+            recommendation = (
+                "Add more transactions "
+                "to generate better insights."
+            )
 
-        "spending_trend":
-            spending_trend,
+        return jsonify({
 
-        "recommendation":
-            recommendation
+            "total_spending":
+                float(total_spending),
 
-    })
+            "top_category":
+                str(top_category),
+
+            "top_category_amount":
+                float(top_category_amount),
+
+            "spending_trend":
+                spending_trend,
+
+            "recommendation":
+                recommendation
+
+        })
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+                "Unable to generate insights",
+
+            "message":
+                str(e)
+
+        }), 500
 
 
 # ============================================================
@@ -497,101 +541,306 @@ def insights():
 @app.route("/transactions")
 def transactions():
 
-    df = load_data()
+    try:
 
-    # Remove accidental spaces from column names
-    df.columns = df.columns.str.strip()
+        df = load_data()
 
-    # Check required columns
-    required_columns = [
-        "date",
-        "merchant",
-        "amount",
-        "type",
-        "category"
-    ]
+        required_columns = [
+            "date",
+            "merchant",
+            "amount",
+            "type",
+            "category"
+        ]
 
-    missing_columns = [
-        column
-        for column in required_columns
-        if column not in df.columns
-    ]
+        missing_columns = [
+            column
+            for column in required_columns
+            if column not in df.columns
+        ]
 
-    if missing_columns:
-        return jsonify({
-            "error": "Missing columns in dataset",
-            "missing_columns": missing_columns,
-            "available_columns": df.columns.tolist()
-        }), 400
+        if missing_columns:
 
-    df["date"] = pd.to_datetime(
-        df["date"],
-        errors="coerce"
-    )
+            return jsonify({
 
-    df["amount"] = pd.to_numeric(
-        df["amount"],
-        errors="coerce"
-    )
+                "error":
+                    "Missing columns in dataset",
 
-    df = df.dropna(
-        subset=["date", "amount"]
-    )
+                "missing_columns":
+                    missing_columns,
 
-    df = df.sort_values(
-        "date",
-        ascending=False
-    )
+                "available_columns":
+                    df.columns.tolist()
 
-    recent = df.head(10).copy()
+            }), 400
 
-    recent["date"] = recent[
-        "date"
-    ].dt.strftime("%Y-%m-%d")
+        recent = df.tail(10).copy()
 
-    recent["amount"] = recent[
-        "amount"
-    ].astype(float)
-
-    return jsonify({
-        "transactions": recent[
-            [
-                "date",
-                "merchant",
-                "amount",
-                "type",
-                "category"
-            ]
-        ].to_dict(
-            orient="records"
+        recent["amount"] = pd.to_numeric(
+            recent["amount"],
+            errors="coerce"
         )
-    })
+
+        recent["date"] = (
+            recent["date"]
+            .astype(str)
+        )
+
+        records = []
+
+        for _, row in recent.iterrows():
+
+            records.append({
+
+                "date":
+                    str(row["date"]),
+
+                "merchant":
+                    str(row["merchant"]),
+
+                "amount":
+                    float(row["amount"]),
+
+                "type":
+                    str(row["type"]),
+
+                "category":
+                    str(row["category"])
+
+            })
+
+        return jsonify({
+
+            "transactions":
+                records
+
+        })
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+                "Unable to load transactions",
+
+            "message":
+                str(e)
+
+        }), 500
+
 
 # ============================================================
-# ERROR HANDLER
+# ADD NEW TRANSACTION API
 # ============================================================
 
-@app.errorhandler(404)
-def page_not_found(error):
+@app.route(
+    "/add-transaction",
+    methods=["POST"]
+)
+def add_transaction():
 
-    return jsonify({
+    try:
 
-        "error": "Endpoint not found",
+        data = request.get_json()
 
-        "message":
-            "The requested API endpoint does not exist."
+        if not data:
 
-    }), 404
+            return jsonify({
+
+                "error":
+                    "No transaction data received"
+
+            }), 400
+
+        required_fields = [
+            "date",
+            "merchant",
+            "amount",
+            "type",
+            "category"
+        ]
+
+        missing_fields = [
+
+            field
+
+            for field in required_fields
+
+            if field not in data
+            or str(data[field]).strip() == ""
+
+        ]
+
+        if missing_fields:
+
+            return jsonify({
+
+                "error":
+                    "Missing required fields",
+
+                "missing_fields":
+                    missing_fields
+
+            }), 400
+
+        # Validate amount
+
+        try:
+
+            amount = float(
+                data["amount"]
+            )
+
+        except (
+            ValueError,
+            TypeError
+        ):
+
+            return jsonify({
+
+                "error":
+                    "Amount must be a number"
+
+            }), 400
+
+        # Validate type
+
+        transaction_type = str(
+            data["type"]
+        ).lower().strip()
+
+        if transaction_type not in [
+            "income",
+            "expense"
+        ]:
+
+            return jsonify({
+
+                "error":
+                    "Type must be income or expense"
+
+            }), 400
+
+        # Load current CSV
+
+        current_df = pd.read_csv(
+            DATA_FILE
+        )
+
+        current_df.columns = (
+            current_df
+            .columns
+            .str.strip()
+            .str.lower()
+        )
+
+        # Create category for old data
+        # if category does not exist
+
+        if "category" not in current_df.columns:
+
+            current_df["category"] = (
+                current_df["merchant"]
+                .apply(get_category)
+            )
+
+        # New transaction
+
+        new_transaction = pd.DataFrame([{
+
+            "date":
+                str(data["date"]),
+
+            "merchant":
+                str(data["merchant"])
+                .strip(),
+
+            "amount":
+                amount,
+
+            "type":
+                transaction_type,
+
+            "category":
+                str(data["category"])
+                .strip()
+
+        }])
+
+        # Add transaction
+
+        updated_df = pd.concat(
+
+            [
+                current_df,
+                new_transaction
+            ],
+
+            ignore_index=True
+
+        )
+
+        # Save CSV
+
+        updated_df.to_csv(
+
+            DATA_FILE,
+
+            index=False
+
+        )
+
+        return jsonify({
+
+            "message":
+                "Transaction added successfully",
+
+            "transaction": {
+
+                "date":
+                    str(data["date"]),
+
+                "merchant":
+                    str(data["merchant"]),
+
+                "amount":
+                    amount,
+
+                "type":
+                    transaction_type,
+
+                "category":
+                    str(data["category"])
+
+            }
+
+        }), 201
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+                "Failed to add transaction",
+
+            "message":
+                str(e)
+
+        }), 500
 
 
 # ============================================================
-# RUN SERVER
+# START SERVER
 # ============================================================
 
 if __name__ == "__main__":
 
     app.run(
+
         debug=True,
+
         host="127.0.0.1",
+
         port=5000
+
     )

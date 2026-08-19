@@ -5,22 +5,13 @@
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>WealthIQ AI | Finance Dashboard</title>
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-
     <style>
-
-        /* =====================================================
-           GLOBAL
-        ===================================================== */
 
         * {
             box-sizing: border-box;
@@ -29,386 +20,291 @@
         }
 
         body {
-
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-
+            font-family: Arial, Helvetica, sans-serif;
             background: #f4f7fb;
-
             color: #172033;
-
         }
 
-
-        /* =====================================================
-           HEADER
-        ===================================================== */
+        /* HEADER */
 
         header {
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #172554,
-                    #1e3a8a
-                );
-
+            background: linear-gradient(
+                135deg,
+                #172554,
+                #1e3a8a
+            );
             color: white;
-
             padding: 35px 50px;
-
         }
 
         header h1 {
-
             font-size: 34px;
-
             margin-bottom: 8px;
-
         }
 
         header p {
-
             color: #cbd5e1;
-
             font-size: 16px;
-
         }
 
-
-        /* =====================================================
-           MAIN CONTAINER
-        ===================================================== */
+        /* MAIN */
 
         .container {
-
             max-width: 1300px;
-
             margin: auto;
-
             padding: 35px;
-
         }
 
-
-        /* =====================================================
-           SUMMARY CARDS
-        ===================================================== */
+        /* CARDS */
 
         .cards {
-
             display: grid;
-
-            grid-template-columns:
-                repeat(4, 1fr);
-
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-
         }
 
         .card {
-
             background: white;
-
             padding: 25px;
-
             border-radius: 16px;
-
             box-shadow:
-                0 5px 20px
-                rgba(0, 0, 0, 0.07);
-
-            transition:
-                transform 0.2s ease;
-
-        }
-
-        .card:hover {
-
-            transform:
-                translateY(-4px);
-
+                0 5px 20px rgba(0, 0, 0, 0.07);
         }
 
         .card h3 {
-
             color: #64748b;
-
             font-size: 14px;
-
             margin-bottom: 12px;
-
         }
 
         .value {
-
             font-size: 28px;
-
             font-weight: bold;
-
             color: #172554;
-
         }
 
-
-        /* =====================================================
-           SECTIONS
-        ===================================================== */
+        /* SECTIONS */
 
         .section {
-
             background: white;
-
             margin-top: 30px;
-
             padding: 30px;
-
             border-radius: 16px;
-
             box-shadow:
-                0 5px 20px
-                rgba(0, 0, 0, 0.07);
-
+                0 5px 20px rgba(0, 0, 0, 0.07);
         }
 
         .section h2 {
-
             margin-bottom: 20px;
-
             color: #172033;
-
         }
 
+        /* FORM */
 
-        /* =====================================================
-           BUDGET
-        ===================================================== */
+        .transaction-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #2563eb;
+        }
+
+        .form-button {
+            grid-column: 1 / -1;
+        }
+
+        .form-button button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .form-button button:hover {
+            background: #1d4ed8;
+        }
+
+        #transactionMessage {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #15803d;
+        }
+
+        .error {
+            color: #dc2626;
+        }
+
+        /* BUDGET */
 
         #budget {
-
             font-size: 18px;
-
             line-height: 1.7;
-
             color: #475569;
-
         }
 
-
-        /* =====================================================
-           TOP CATEGORY
-        ===================================================== */
+        /* CATEGORY */
 
         #category {
-
             font-size: 20px;
-
             font-weight: bold;
-
             color: #1e3a8a;
-
         }
 
-
-        /* =====================================================
-           CHARTS
-        ===================================================== */
+        /* CHARTS */
 
         .chart-container {
-
             max-width: 650px;
-
             height: 350px;
-
             margin: auto;
-
             position: relative;
-
         }
 
-
-        /* =====================================================
-           AI INSIGHTS
-        ===================================================== */
+        /* INSIGHTS */
 
         .insight-box {
-
             background: #f8fafc;
-
-            border-left:
-                5px solid #2563eb;
-
+            border-left: 5px solid #2563eb;
             padding: 20px;
-
             border-radius: 10px;
-
             line-height: 1.7;
-
         }
 
         .insight-item {
-
             margin-bottom: 12px;
-
         }
 
         .insight-label {
-
             font-weight: bold;
-
             color: #334155;
-
         }
 
-
-        /* =====================================================
-           TRANSACTIONS TABLE
-        ===================================================== */
+        /* TABLE */
 
         .table-container {
-
             width: 100%;
-
             overflow-x: auto;
-
         }
 
         table {
-
             width: 100%;
-
-            border-collapse:
-                collapse;
-
+            border-collapse: collapse;
         }
 
         th {
-
             background: #f8fafc;
-
             color: #475569;
-
             font-size: 14px;
-
             text-align: left;
-
             padding: 15px;
-
-            border-bottom:
-                2px solid #e2e8f0;
-
+            border-bottom: 2px solid #e2e8f0;
         }
 
         td {
-
             padding: 15px;
-
             font-size: 14px;
-
-            border-bottom:
-                1px solid #e2e8f0;
-
+            border-bottom: 1px solid #e2e8f0;
         }
 
         tr:hover {
-
             background: #f8fafc;
-
         }
 
         .transaction-income {
-
             color: #15803d;
-
             font-weight: bold;
-
         }
 
         .transaction-expense {
-
             color: #dc2626;
-
             font-weight: bold;
-
         }
 
-
-        /* =====================================================
-           FOOTER
-        ===================================================== */
+        /* FOOTER */
 
         footer {
-
             text-align: center;
-
             padding: 30px;
-
             color: #64748b;
-
         }
 
-
-        /* =====================================================
-           RESPONSIVE
-        ===================================================== */
+        /* RESPONSIVE */
 
         @media (max-width: 1000px) {
 
             .cards {
-
-                grid-template-columns:
-                    repeat(2, 1fr);
-
+                grid-template-columns: repeat(2, 1fr);
             }
 
         }
 
-
         @media (max-width: 600px) {
 
             header {
-
                 padding: 25px;
-
             }
 
             header h1 {
-
                 font-size: 28px;
-
             }
 
             .container {
-
                 padding: 20px;
-
             }
 
             .cards {
+                grid-template-columns: 1fr;
+            }
 
-                grid-template-columns:
-                    1fr;
+            .transaction-form {
+                grid-template-columns: 1fr;
+            }
 
+            .form-button {
+                grid-column: auto;
             }
 
             .value {
-
                 font-size: 24px;
-
             }
 
             .section {
-
                 padding: 20px;
-
             }
 
             .chart-container {
-
                 height: 280px;
-
             }
 
         }
@@ -421,9 +317,9 @@
 <body>
 
 
-<!-- =========================================================
+<!-- =====================================================
      HEADER
-========================================================= -->
+===================================================== -->
 
 <header>
 
@@ -437,237 +333,381 @@
 </header>
 
 
-<!-- =========================================================
-     MAIN
-========================================================= -->
-
 <div class="container">
 
 
-    <!-- =====================================================
-         SUMMARY CARDS
-    ====================================================== -->
+<!-- =====================================================
+     SUMMARY CARDS
+===================================================== -->
 
-    <div class="cards">
+<div class="cards">
 
+    <div class="card">
 
-        <div class="card">
-
-            <h3>Total Income</h3>
-
-            <div
-                class="value"
-                id="income"
-            >
-                Loading...
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>Total Expenses</h3>
-
-            <div
-                class="value"
-                id="expenses"
-            >
-                Loading...
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>Current Balance</h3>
-
-            <div
-                class="value"
-                id="balance"
-            >
-                Loading...
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>Predicted Spending</h3>
-
-            <div
-                class="value"
-                id="forecast"
-            >
-                Loading...
-            </div>
-
-        </div>
-
-
-    </div>
-
-
-    <!-- =====================================================
-         BUDGET
-    ====================================================== -->
-
-    <div class="section">
-
-        <h2>
-            🎯 Budget Recommendation
-        </h2>
-
-        <p id="budget">
-            Loading...
-        </p>
-
-    </div>
-
-
-    <!-- =====================================================
-         TOP CATEGORY
-    ====================================================== -->
-
-    <div class="section">
-
-        <h2>
-            🏷️ Top Spending Category
-        </h2>
-
-        <p id="category">
-            Loading...
-        </p>
-
-    </div>
-
-
-    <!-- =====================================================
-         CATEGORY CHART
-    ====================================================== -->
-
-    <div class="section">
-
-        <h2>
-            📊 Spending by Category
-        </h2>
-
-        <div class="chart-container">
-
-            <canvas
-                id="spendingChart"
-            ></canvas>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         MONTHLY CHART
-    ====================================================== -->
-
-    <div class="section">
-
-        <h2>
-            📈 Monthly Spending Trend
-        </h2>
-
-        <div class="chart-container">
-
-            <canvas
-                id="monthlyChart"
-            ></canvas>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         AI INSIGHTS
-    ====================================================== -->
-
-    <div class="section">
-
-        <h2>
-            🤖 WealthIQ AI Insights
-        </h2>
+        <h3>Total Income</h3>
 
         <div
-            class="insight-box"
-            id="insights"
+            class="value"
+            id="income"
         >
-
-            Loading financial insights...
-
+            Loading...
         </div>
 
     </div>
 
 
-    <!-- =====================================================
-         RECENT TRANSACTIONS
-    ====================================================== -->
+    <div class="card">
 
-    <div class="section">
+        <h3>Total Expenses</h3>
 
-        <h2>
-            💳 Recent Transactions
-        </h2>
-
-        <div class="table-container">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>Date</th>
-
-                        <th>Merchant</th>
-
-                        <th>Category</th>
-
-                        <th>Type</th>
-
-                        <th>Amount</th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody
-                    id="transactionsTable"
-                >
-
-                    <tr>
-
-                        <td colspan="5">
-                            Loading transactions...
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
+        <div
+            class="value"
+            id="expenses"
+        >
+            Loading...
         </div>
 
     </div>
 
+
+    <div class="card">
+
+        <h3>Current Balance</h3>
+
+        <div
+            class="value"
+            id="balance"
+        >
+            Loading...
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>Predicted Spending</h3>
+
+        <div
+            class="value"
+            id="forecast"
+        >
+            Loading...
+        </div>
+
+    </div>
 
 </div>
 
 
-<!-- =========================================================
-     FOOTER
-========================================================= -->
+<!-- =====================================================
+     ADD TRANSACTION
+===================================================== -->
+
+<div class="section">
+
+    <h2>
+        ➕ Add Transaction
+    </h2>
+
+    <form
+        id="transactionForm"
+        class="transaction-form"
+    >
+
+        <div class="form-group">
+
+            <label for="transactionDate">
+                Date
+            </label>
+
+            <input
+                type="date"
+                id="transactionDate"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="merchant">
+                Merchant
+            </label>
+
+            <input
+                type="text"
+                id="merchant"
+                placeholder="e.g. Amazon"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="amount">
+                Amount (₹)
+            </label>
+
+            <input
+                type="number"
+                id="amount"
+                placeholder="e.g. 1500"
+                min="0"
+                step="0.01"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="type">
+                Transaction Type
+            </label>
+
+            <select
+                id="type"
+                required
+            >
+
+                <option value="expense">
+                    Expense
+                </option>
+
+                <option value="income">
+                    Income
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="category">
+                Category
+            </label>
+
+            <select
+                id="category"
+                required
+            >
+
+                <option value="Food">
+                    Food
+                </option>
+
+                <option value="Shopping">
+                    Shopping
+                </option>
+
+                <option value="Transport">
+                    Transport
+                </option>
+
+                <option value="Entertainment">
+                    Entertainment
+                </option>
+
+                <option value="Bills">
+                    Bills
+                </option>
+
+                <option value="Housing">
+                    Housing
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+                <option value="Income">
+                    Income
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-button">
+
+            <button
+                type="submit"
+            >
+                Add Transaction
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <p
+        id="transactionMessage"
+    ></p>
+
+</div>
+
+
+<!-- =====================================================
+     BUDGET
+===================================================== -->
+
+<div class="section">
+
+    <h2>
+        🎯 Budget Recommendation
+    </h2>
+
+    <p id="budget">
+        Loading...
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     TOP CATEGORY
+===================================================== -->
+
+<div class="section">
+
+    <h2>
+        🏷️ Top Spending Category
+    </h2>
+
+    <p id="category">
+        Loading...
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     CATEGORY CHART
+===================================================== -->
+
+<div class="section">
+
+    <h2>
+        📊 Spending by Category
+    </h2>
+
+    <div class="chart-container">
+
+        <canvas
+            id="spendingChart"
+        ></canvas>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MONTHLY CHART
+===================================================== -->
+
+<div class="section">
+
+    <h2>
+        📈 Monthly Spending Trend
+    </h2>
+
+    <div class="chart-container">
+
+        <canvas
+            id="monthlyChart"
+        ></canvas>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     AI INSIGHTS
+===================================================== -->
+
+<div class="section">
+
+    <h2>
+        🤖 WealthIQ AI Insights
+    </h2>
+
+    <div
+        class="insight-box"
+        id="insights"
+    >
+        Loading financial insights...
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     RECENT TRANSACTIONS
+===================================================== -->
+
+<div class="section">
+
+    <h2>
+        💳 Recent Transactions
+    </h2>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Date</th>
+
+                    <th>Merchant</th>
+
+                    <th>Category</th>
+
+                    <th>Type</th>
+
+                    <th>Amount</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody
+                id="transactionsTable"
+            >
+
+                <tr>
+
+                    <td colspan="5">
+                        Loading transactions...
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+</div>
+
 
 <footer>
 
@@ -676,24 +716,20 @@
 </footer>
 
 
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
-
 <script>
 
 
-/* ============================================================
-   API BASE URL
-============================================================ */
+/* =====================================================
+   API URL
+===================================================== */
 
 const API_URL =
     "http://127.0.0.1:5000";
 
 
-/* ============================================================
-   LOAD DASHBOARD
-============================================================ */
+/* =====================================================
+   DASHBOARD
+===================================================== */
 
 async function loadDashboard() {
 
@@ -708,59 +744,41 @@ async function loadDashboard() {
             await response.json();
 
 
-        /* INCOME */
-
         document.getElementById(
             "income"
         ).textContent =
-
             "₹" +
-
             Number(
                 data.total_income
             ).toLocaleString();
 
 
-        /* EXPENSES */
-
         document.getElementById(
             "expenses"
         ).textContent =
-
             "₹" +
-
             Number(
                 data.total_expenses
             ).toLocaleString();
 
 
-        /* BALANCE */
-
         document.getElementById(
             "balance"
         ).textContent =
-
             "₹" +
-
             Number(
                 data.balance
             ).toLocaleString();
 
 
-        /* FORECAST */
-
         document.getElementById(
             "forecast"
         ).textContent =
-
             "₹" +
-
             Number(
                 data.predicted_spending
             ).toLocaleString();
 
-
-        /* BUDGET */
 
         document.getElementById(
             "budget"
@@ -776,8 +794,6 @@ async function loadDashboard() {
 
             data.budget_status;
 
-
-        /* TOP CATEGORY */
 
         document.getElementById(
             "category"
@@ -805,9 +821,9 @@ async function loadDashboard() {
 }
 
 
-/* ============================================================
+/* =====================================================
    CATEGORY CHART
-============================================================ */
+===================================================== */
 
 async function loadSpendingChart() {
 
@@ -822,14 +838,12 @@ async function loadSpendingChart() {
             await response.json();
 
 
-        const canvas =
-            document.getElementById(
-                "spendingChart"
-            );
-
-
         const ctx =
-            canvas.getContext("2d");
+            document
+            .getElementById(
+                "spendingChart"
+            )
+            .getContext("2d");
 
 
         new Chart(
@@ -896,9 +910,9 @@ async function loadSpendingChart() {
 }
 
 
-/* ============================================================
-   MONTHLY SPENDING CHART
-============================================================ */
+/* =====================================================
+   MONTHLY CHART
+===================================================== */
 
 async function loadMonthlyChart() {
 
@@ -914,14 +928,12 @@ async function loadMonthlyChart() {
             await response.json();
 
 
-        const canvas =
-            document.getElementById(
-                "monthlyChart"
-            );
-
-
         const ctx =
-            canvas.getContext("2d");
+            document
+            .getElementById(
+                "monthlyChart"
+            )
+            .getContext("2d");
 
 
         new Chart(
@@ -994,9 +1006,9 @@ async function loadMonthlyChart() {
 }
 
 
-/* ============================================================
+/* =====================================================
    AI INSIGHTS
-============================================================ */
+===================================================== */
 
 async function loadInsights() {
 
@@ -1075,20 +1087,14 @@ async function loadInsights() {
             error
         );
 
-
-        document.getElementById(
-            "insights"
-        ).textContent =
-            "Unable to load insights.";
-
     }
 
 }
 
 
-/* ============================================================
-   RECENT TRANSACTIONS
-============================================================ */
+/* =====================================================
+   TRANSACTIONS
+===================================================== */
 
 async function loadTransactions() {
 
@@ -1099,7 +1105,6 @@ async function loadTransactions() {
                 API_URL +
                 "/transactions"
             );
-
 
         const data =
             await response.json();
@@ -1139,7 +1144,6 @@ async function loadTransactions() {
         data.transactions.forEach(
             transaction => {
 
-
                 const row =
                     document.createElement(
                         "tr"
@@ -1162,23 +1166,19 @@ async function loadTransactions() {
                         ${transaction.date}
                     </td>
 
-
                     <td>
                         ${transaction.merchant}
                     </td>
 
-
                     <td>
                         ${transaction.category}
                     </td>
-
 
                     <td
                         class="${typeClass}"
                     >
                         ${transaction.type}
                     </td>
-
 
                     <td>
                         ₹${Number(
@@ -1205,29 +1205,175 @@ async function loadTransactions() {
             error
         );
 
-
-        document.getElementById(
-            "transactionsTable"
-        ).innerHTML = `
-
-            <tr>
-
-                <td colspan="5">
-                    Unable to load transactions.
-                </td>
-
-            </tr>
-
-        `;
-
     }
 
 }
 
 
-/* ============================================================
+/* =====================================================
+   ADD TRANSACTION
+===================================================== */
+
+document
+.getElementById(
+    "transactionForm"
+)
+.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const message =
+            document.getElementById(
+                "transactionMessage"
+            );
+
+
+        message.textContent =
+            "Saving transaction...";
+
+        message.className = "";
+
+
+        const transaction = {
+
+            date:
+                document.getElementById(
+                    "transactionDate"
+                ).value,
+
+            merchant:
+                document.getElementById(
+                    "merchant"
+                ).value,
+
+            amount:
+                Number(
+                    document.getElementById(
+                        "amount"
+                    ).value
+                ),
+
+            type:
+                document.getElementById(
+                    "type"
+                ).value,
+
+            category:
+                document.getElementById(
+                    "category"
+                ).value
+
+        };
+
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL +
+                    "/add-transaction",
+                    {
+
+                        method:
+                            "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                transaction
+                            )
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message ||
+                    data.error ||
+                    "Unable to add transaction"
+                );
+
+            }
+
+
+            message.textContent =
+                "✅ Transaction added successfully!";
+
+            message.className =
+                "success";
+
+
+            /* Clear form */
+
+            document
+            .getElementById(
+                "transactionForm"
+            )
+            .reset();
+
+
+            /* Refresh dashboard */
+
+            await loadDashboard();
+
+            await loadTransactions();
+
+            await loadInsights();
+
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Add transaction error:",
+                error
+            );
+
+
+            message.textContent =
+                "❌ " +
+                error.message;
+
+            message.className =
+                "error";
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   DEFAULT DATE
+===================================================== */
+
+document
+.getElementById(
+    "transactionDate"
+)
+.valueAsDate =
+    new Date();
+
+
+/* =====================================================
    START DASHBOARD
-============================================================ */
+===================================================== */
 
 loadDashboard();
 
