@@ -635,6 +635,17 @@
 <!-- =====================================================
      AI INSIGHTS
 ===================================================== -->
+<div class="section">
+
+    <h2>
+        ❤️ Financial Health Score
+    </h2>
+
+    <div id="healthScore">
+        Loading...
+    </div>
+
+</div>
 
 <div class="section">
 
@@ -1370,7 +1381,68 @@ document
 .valueAsDate =
     new Date();
 
+/* =====================================================
+   FINANCIAL HEALTH SCORE
+===================================================== */
 
+async function loadFinancialHealth() {
+
+    try {
+
+        const response = await fetch(
+            API_URL + "/financial-health"
+        );
+
+        const data = await response.json();
+
+        const healthScore =
+            document.getElementById(
+                "healthScore"
+            );
+
+        healthScore.innerHTML = `
+
+            <h3 style="
+                font-size: 48px;
+                color: #2563eb;
+                margin-bottom: 10px;
+            ">
+                ${data.score}/100
+            </h3>
+
+            <p style="
+                font-size: 22px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            ">
+                ${data.rating}
+            </p>
+
+            <p>
+                Savings: ₹${Number(
+                    data.savings
+                ).toLocaleString()}
+            </p>
+
+            <p>
+                Savings Rate:
+                ${data.savings_rate}%
+            </p>
+
+        `;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Financial health error:",
+            error
+        );
+
+    }
+
+}
 /* =====================================================
    START DASHBOARD
 ===================================================== */
@@ -1384,6 +1456,8 @@ loadMonthlyChart();
 loadInsights();
 
 loadTransactions();
+
+loadFinancialHealth();
 
 
 </script>

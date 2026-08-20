@@ -832,7 +832,109 @@ def add_transaction():
 # ============================================================
 # START SERVER
 # ============================================================
+# ============================================================
+# FINANCIAL HEALTH SCORE API
+# ============================================================
 
+@app.route("/financial-health")
+def financial_health():
+
+    try:
+
+        df = load_data()
+
+        df["amount"] = pd.to_numeric(
+            df["amount"],
+            errors="coerce"
+        )
+
+        income = df[
+            df["type"].str.lower() == "income"
+        ]["amount"].sum()
+
+        expenses = df[
+            df["type"].str.lower() == "expense"
+        ]["amount"].sum()
+
+        if income <= 0:
+
+            return jsonify({
+                "score": 0,
+                "rating": "Insufficient Data",
+                "message": "Add income transactions to calculate your financial health."
+            })
+
+        savings = income - expenses
+
+        savings_rate = (
+            savings / income
+        ) * 100
+
+        # Start with 100 points
+        score = 100
+
+        # Penalize overspending
+        if savings_rate < 0:
+            score -= 50
+
+        elif savings_rate < 10:
+            score -= 30
+
+        elif savings_rate < 20:
+            score -= 15
+
+        # Keep score between 0 and 100
+        score = max(
+            0,
+            min(100, score)
+        )
+
+        if score >= 80:
+            rating = "Excellent"
+        elif score >= 60:
+            rating = "Good"
+        elif score >= 40:
+            rating = "Fair"
+        else:
+            rating = "Needs Improvement"
+
+        return jsonify({
+
+            "score": int(score),
+
+            "rating": rating,
+
+            "total_income":
+                float(income),
+
+            "total_expenses":
+                float(expenses),
+
+            "savings":
+                float(savings),
+
+            "savings_rate":
+                round(
+                    float(savings_rate),
+                    2
+                ),
+
+            "message":
+                "Financial health calculated successfully."
+
+        })
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+                "Unable to calculate financial health",
+
+            "message":
+                str(e)
+
+        }), 500
 if __name__ == "__main__":
 
     app.run(
