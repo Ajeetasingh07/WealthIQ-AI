@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>WealthIQ AI | Finance Dashboard</title>
 
     <style>
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -28,7 +35,12 @@
         /* HEADER */
 
         .header {
-            background: linear-gradient(135deg, #172c72, #2457d6);
+            background: linear-gradient(
+                135deg,
+                #172c72,
+                #2457d6
+            );
+
             color: white;
             padding: 30px;
             border-radius: 18px;
@@ -44,11 +56,13 @@
             opacity: 0.9;
         }
 
-        /* CARDS */
+        /* SUMMARY */
 
         .summary-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns:
+                repeat(4, 1fr);
+
             gap: 18px;
             margin-bottom: 25px;
         }
@@ -57,7 +71,14 @@
             background: white;
             padding: 22px;
             border-radius: 15px;
-            box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+
+            box-shadow:
+                0 5px 18px rgba(
+                    0,
+                    0,
+                    0,
+                    0.06
+                );
         }
 
         .summary-card h4 {
@@ -72,14 +93,21 @@
             color: #172c72;
         }
 
-        /* FORM */
+        /* CARD */
 
         .card {
             background: white;
             padding: 25px;
             border-radius: 16px;
             margin-bottom: 25px;
-            box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+
+            box-shadow:
+                0 5px 18px rgba(
+                    0,
+                    0,
+                    0,
+                    0.06
+                );
         }
 
         .card h2 {
@@ -87,9 +115,13 @@
             color: #172033;
         }
 
+        /* FORM */
+
         .form-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns:
+                1fr 1fr;
+
             gap: 18px;
         }
 
@@ -109,10 +141,17 @@
         select {
             width: 100%;
             height: 48px;
-            border: 1px solid #cbd5e1;
+
+            border:
+                1px solid #cbd5e1;
+
             border-radius: 8px;
-            padding: 0 14px;
+
+            padding:
+                0 14px;
+
             font-size: 15px;
+
             background: white;
             color: #172033;
         }
@@ -120,8 +159,17 @@
         input:focus,
         select:focus {
             outline: none;
+
             border-color: #2864e8;
-            box-shadow: 0 0 0 3px rgba(40,100,232,0.12);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(
+                    40,
+                    100,
+                    232,
+                    0.12
+                );
         }
 
         .full {
@@ -131,14 +179,17 @@
         .submit-btn {
             width: 100%;
             height: 50px;
+
             border: none;
             border-radius: 8px;
+
             background: #2864e8;
             color: white;
+
             font-size: 16px;
             font-weight: bold;
+
             cursor: pointer;
-            margin-top: 5px;
         }
 
         .submit-btn:hover {
@@ -169,11 +220,14 @@
             color: #991b1b;
         }
 
-        /* TWO COLUMN */
+        /* TWO COLUMNS */
 
         .two-column {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+
+            grid-template-columns:
+                1fr 1fr;
+
             gap: 25px;
         }
 
@@ -186,7 +240,7 @@
             margin-top: 10px;
         }
 
-        /* CATEGORY BARS */
+        /* CATEGORY */
 
         .category-row {
             margin-bottom: 16px;
@@ -202,7 +256,9 @@
         .bar-bg {
             width: 100%;
             height: 10px;
+
             background: #e5eaf2;
+
             border-radius: 10px;
             overflow: hidden;
         }
@@ -230,9 +286,13 @@
 
         .monthly-bar-bg {
             flex: 1;
+
             height: 22px;
+
             background: #e7ebf3;
+
             border-radius: 6px;
+
             overflow: hidden;
         }
 
@@ -265,10 +325,28 @@
 
         .insight {
             background: #f4f7ff;
-            border-left: 4px solid #2864e8;
+
+            border-left:
+                4px solid #2864e8;
+
             padding: 14px;
+
             margin-bottom: 10px;
+
             border-radius: 5px;
+        }
+
+        /* FILTERS */
+
+        .filter-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr 1fr;
+
+            gap: 12px;
+
+            margin-bottom: 20px;
         }
 
         /* TABLE */
@@ -285,7 +363,10 @@
         th,
         td {
             padding: 13px;
-            border-bottom: 1px solid #e5e7eb;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
             text-align: left;
         }
 
@@ -311,22 +392,34 @@
         /* RESPONSIVE */
 
         @media (max-width: 900px) {
+
             .summary-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns:
+                    1fr 1fr;
             }
 
             .two-column {
-                grid-template-columns: 1fr;
+                grid-template-columns:
+                    1fr;
             }
+
         }
 
         @media (max-width: 600px) {
+
             .summary-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns:
+                    1fr;
             }
 
             .form-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns:
+                    1fr;
+            }
+
+            .filter-grid {
+                grid-template-columns:
+                    1fr;
             }
 
             .full {
@@ -336,19 +429,33 @@
             .container {
                 width: 95%;
             }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
+
 <div class="container">
+
 
     <!-- HEADER -->
 
     <div class="header">
-        <h1>WealthIQ AI</h1>
-        <p>AI-Powered Personal Finance Management & Predictive Budgeting</p>
+
+        <h1>
+            WealthIQ AI
+        </h1>
+
+        <p>
+            AI-Powered Personal Finance
+            Management & Predictive Budgeting
+        </p>
+
     </div>
 
 
@@ -356,25 +463,70 @@
 
     <div class="summary-grid">
 
-        <div class="summary-card">
-            <h4>Total Income</h4>
-            <div class="value" id="totalIncome">Loading...</div>
-        </div>
 
         <div class="summary-card">
-            <h4>Total Expenses</h4>
-            <div class="value" id="totalExpenses">Loading...</div>
+
+            <h4>
+                Total Income
+            </h4>
+
+            <div
+                class="value"
+                id="totalIncome"
+            >
+                Loading...
+            </div>
+
         </div>
 
-        <div class="summary-card">
-            <h4>Current Balance</h4>
-            <div class="value" id="currentBalance">Loading...</div>
-        </div>
 
         <div class="summary-card">
-            <h4>Predicted Spending</h4>
-            <div class="value" id="predictedSpending">Loading...</div>
+
+            <h4>
+                Total Expenses
+            </h4>
+
+            <div
+                class="value"
+                id="totalExpenses"
+            >
+                Loading...
+            </div>
+
         </div>
+
+
+        <div class="summary-card">
+
+            <h4>
+                Current Balance
+            </h4>
+
+            <div
+                class="value"
+                id="currentBalance"
+            >
+                Loading...
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <h4>
+                Predicted Spending
+            </h4>
+
+            <div
+                class="value"
+                id="predictedSpending"
+            >
+                Loading...
+            </div>
+
+        </div>
+
 
     </div>
 
@@ -383,25 +535,37 @@
 
     <div class="card">
 
-        <h2>➕ Add Transaction</h2>
+        <h2>
+            ➕ Add Transaction
+        </h2>
+
 
         <form id="transactionForm">
 
+
             <div class="form-grid">
 
+
                 <div class="field">
-                    <label for="date">Date</label>
+
+                    <label for="date">
+                        Date
+                    </label>
 
                     <input
                         type="date"
                         id="date"
                         required
                     >
+
                 </div>
 
 
                 <div class="field">
-                    <label for="merchant">Merchant</label>
+
+                    <label for="merchant">
+                        Merchant
+                    </label>
 
                     <input
                         type="text"
@@ -409,11 +573,15 @@
                         placeholder="e.g. Amazon"
                         required
                     >
+
                 </div>
 
 
                 <div class="field">
-                    <label for="amount">Amount (₹)</label>
+
+                    <label for="amount">
+                        Amount (₹)
+                    </label>
 
                     <input
                         type="number"
@@ -423,13 +591,20 @@
                         step="0.01"
                         required
                     >
+
                 </div>
 
 
                 <div class="field">
-                    <label for="type">Transaction Type</label>
 
-                    <select id="type" required>
+                    <label for="type">
+                        Transaction Type
+                    </label>
+
+                    <select
+                        id="type"
+                        required
+                    >
 
                         <option value="expense">
                             Expense
@@ -440,10 +615,9 @@
                         </option>
 
                     </select>
+
                 </div>
 
-
-                <!-- IMPORTANT: UNIQUE CATEGORY ID -->
 
                 <div class="field">
 
@@ -506,23 +680,29 @@
 
                 </div>
 
+
             </div>
+
 
         </form>
 
 
         <div id="message"></div>
 
+
     </div>
 
 
-    <!-- BUDGET + TOP CATEGORY -->
+    <!-- BUDGET -->
 
     <div class="two-column">
 
+
         <div class="card">
 
-            <h2>🎯 Budget Recommendation</h2>
+            <h2>
+                🎯 Budget Recommendation
+            </h2>
 
             <div
                 class="info-value"
@@ -540,9 +720,9 @@
 
         <div class="card">
 
-            <h2>🏷️ Top Spending Category</h2>
-
-            <!-- IMPORTANT: NOT id="category" -->
+            <h2>
+                🏷️ Top Spending Category
+            </h2>
 
             <div
                 class="info-value"
@@ -553,6 +733,7 @@
 
         </div>
 
+
     </div>
 
 
@@ -560,12 +741,19 @@
 
     <div class="two-column">
 
+
         <div class="card">
 
-            <h2>📊 Spending by Category</h2>
+            <h2>
+                📊 Spending by Category
+            </h2>
 
             <div id="categoryChart">
-                <p class="loading">Loading...</p>
+
+                <p class="loading">
+                    Loading...
+                </p>
+
             </div>
 
         </div>
@@ -573,13 +761,20 @@
 
         <div class="card">
 
-            <h2>📈 Monthly Spending Trend</h2>
+            <h2>
+                📈 Monthly Spending Trend
+            </h2>
 
             <div id="monthlyChart">
-                <p class="loading">Loading...</p>
+
+                <p class="loading">
+                    Loading...
+                </p>
+
             </div>
 
         </div>
+
 
     </div>
 
@@ -588,7 +783,9 @@
 
     <div class="card">
 
-        <h2>❤️ Financial Health Score</h2>
+        <h2>
+            ❤️ Financial Health Score
+        </h2>
 
         <div
             class="health-score"
@@ -607,11 +804,13 @@
     </div>
 
 
-    <!-- INSIGHTS -->
+    <!-- AI INSIGHTS -->
 
     <div class="card">
 
-        <h2>🤖 WealthIQ AI Insights</h2>
+        <h2>
+            🤖 WealthIQ AI Insights
+        </h2>
 
         <div id="insights">
 
@@ -624,548 +823,773 @@
     </div>
 
 
-    <!-- RECENT TRANSACTIONS -->
+    <!-- TRANSACTIONS -->
 
     <div class="card">
 
-        <h2>💳 Recent Transactions</h2>
+        <h2>
+            💳 Recent Transactions
+        </h2>
+
+
+        <!-- FILTERS -->
+
+        <div class="filter-grid">
+
+
+            <input
+                type="text"
+                id="searchTransaction"
+                placeholder="Search merchant..."
+            >
+
+
+            <select id="filterCategory">
+
+                <option value="">
+                    All Categories
+                </option>
+
+                <option value="Food">
+                    Food
+                </option>
+
+                <option value="Shopping">
+                    Shopping
+                </option>
+
+                <option value="Transport">
+                    Transport
+                </option>
+
+                <option value="Entertainment">
+                    Entertainment
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+                <option value="Income">
+                    Income
+                </option>
+
+            </select>
+
+
+            <select id="filterType">
+
+                <option value="">
+                    All Types
+                </option>
+
+                <option value="expense">
+                    Expense
+                </option>
+
+                <option value="income">
+                    Income
+                </option>
+
+            </select>
+
+
+        </div>
+
 
         <div class="table-wrapper">
 
+
             <table>
+
 
                 <thead>
 
                     <tr>
-                        <th>Date</th>
-                        <th>Merchant</th>
-                        <th>Amount</th>
-                        <th>Type</th>
-                        <th>Category</th>
-                        <th>Action</th>
-    
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Merchant
+                        </th>
+
+                        <th>
+                            Amount
+                        </th>
+
+                        <th>
+                            Type
+                        </th>
+
+                        <th>
+                            Category
+                        </th>
+
                     </tr>
 
                 </thead>
 
-                <tbody id="transactionsBody">
+
+                <tbody
+                    id="transactionsBody"
+                >
 
                     <tr>
+
                         <td
                             colspan="5"
                             class="loading"
                         >
                             Loading...
                         </td>
+
                     </tr>
 
                 </tbody>
 
+
             </table>
+
 
         </div>
 
+
     </div>
+
 
 </div>
 
 
 <script>
 
-    /* ==========================================
-       BACKEND
-    ========================================== */
 
-    const API = "http://127.0.0.1:5000";
+/* ==========================================
+   BACKEND URL
+========================================== */
+
+const API =
+    "http://127.0.0.1:5000";
 
 
-    /* ==========================================
-       MONEY FORMAT
-    ========================================== */
+/* ==========================================
+   MONEY FORMAT
+========================================== */
 
-    function money(value) {
+function money(value) {
 
-        const number = Number(value || 0);
+    const number =
+        Number(value || 0);
 
-        return "₹" + number.toLocaleString(
+    return "₹" +
+        number.toLocaleString(
             "en-IN",
             {
                 maximumFractionDigits: 2
             }
         );
-    }
 
+}
 
-    /* ==========================================
-       DASHBOARD
-    ========================================== */
 
-    async function loadDashboard() {
-
-        try {
-
-            const response =
-                await fetch(API + "/dashboard");
-
-            if (!response.ok) {
-                throw new Error(
-                    "Dashboard API failed"
-                );
-            }
-
-            const data =
-                await response.json();
-
-
-            document.getElementById(
-                "totalIncome"
-            ).textContent =
-                money(data.total_income);
-
-
-            document.getElementById(
-                "totalExpenses"
-            ).textContent =
-                money(data.total_expenses);
-
-
-            document.getElementById(
-                "currentBalance"
-            ).textContent =
-                money(data.balance);
-
-
-            document.getElementById(
-                "predictedSpending"
-            ).textContent =
-                money(data.predicted_spending);
-
-
-            document.getElementById(
-                "recommendedBudget"
-            ).textContent =
-                "Recommended Budget: " +
-                money(data.recommended_budget);
-
-
-            document.getElementById(
-                "budgetStatus"
-            ).textContent =
-                "Status: " +
-                (data.budget_status || "Unknown");
-
-
-            document.getElementById(
-                "topCategory"
-            ).textContent =
-                (data.top_category || "No data") +
-                " — " +
-                money(data.top_category_amount);
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Dashboard error:",
-                error
-            );
-
-        }
-
-    }
-
-
-    /* ==========================================
-       CATEGORY CHART
-    ========================================== */
-
-    async function loadSpendingChart() {
-
-        const container =
-            document.getElementById(
-                "categoryChart"
-            );
-
-        try {
-
-            const response =
-                await fetch(
-                    API + "/categories"
-                );
-
-            if (!response.ok) {
-                throw new Error(
-                    "Categories API failed"
-                );
-            }
-
-            const data =
-                await response.json();
-
-
-            container.innerHTML = "";
-
-
-            if (
-                !data.categories ||
-                data.categories.length === 0
-            ) {
-
-                container.innerHTML =
-                    "<p>No spending data available.</p>";
-
-                return;
-            }
-
-
-            const maxAmount =
-                Math.max(
-                    ...data.amounts.map(
-                        Number
-                    )
-                );
-
-
-            data.categories.forEach(
-                function(category, index) {
-
-                    const amount =
-                        Number(
-                            data.amounts[index] || 0
-                        );
-
-
-                    const percentage =
-                        maxAmount > 0
-                            ? (amount / maxAmount) * 100
-                            : 0;
-
-
-                    const row =
-                        document.createElement(
-                            "div"
-                        );
-
-                    row.className =
-                        "category-row";
-
-
-                    row.innerHTML = `
-
-                        <div class="category-header">
-
-                            <span>
-                                ${category}
-                            </span>
-
-                            <strong>
-                                ${money(amount)}
-                            </strong>
-
-                        </div>
-
-                        <div class="bar-bg">
-
-                            <div
-                                class="bar"
-                                style="width:${percentage}%"
-                            ></div>
-
-                        </div>
-
-                    `;
-
-
-                    container.appendChild(row);
-
-                }
-            );
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Category chart error:",
-                error
-            );
-
-            container.innerHTML =
-                "<p>Unable to load category data.</p>";
-
-        }
-
-    }
-
-
-    /* ==========================================
-       MONTHLY SPENDING
-    ========================================== */
-
-    async function loadMonthlyChart() {
-
-        const container =
-            document.getElementById(
-                "monthlyChart"
-            );
-
-        try {
-
-            const response =
-                await fetch(
-                    API + "/monthly-spending"
-                );
-
-            if (!response.ok) {
-                throw new Error(
-                    "Monthly spending API failed"
-                );
-            }
-
-            const data =
-                await response.json();
-
-
-            container.innerHTML = "";
-
-
-            if (
-                !data.months ||
-                data.months.length === 0
-            ) {
-
-                container.innerHTML =
-                    "<p>No monthly data available.</p>";
-
-                return;
-            }
-
-
-            const maxAmount =
-                Math.max(
-                    ...data.amounts.map(
-                        Number
-                    )
-                );
-
-
-            data.months.forEach(
-                function(month, index) {
-
-                    const amount =
-                        Number(
-                            data.amounts[index] || 0
-                        );
-
-
-                    const percentage =
-                        maxAmount > 0
-                            ? (amount / maxAmount) * 100
-                            : 0;
-
-
-                    const row =
-                        document.createElement(
-                            "div"
-                        );
-
-                    row.className =
-                        "monthly-row";
-
-
-                    row.innerHTML = `
-
-                        <div class="month-name">
-                            ${month}
-                        </div>
-
-                        <div class="monthly-bar-bg">
-
-                            <div
-                                class="monthly-bar"
-                                style="width:${percentage}%"
-                            ></div>
-
-                        </div>
-
-                        <div class="month-amount">
-                            ${money(amount)}
-                        </div>
-
-                    `;
-
-
-                    container.appendChild(row);
-
-                }
-            );
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Monthly chart error:",
-                error
-            );
-
-            container.innerHTML =
-                "<p>Unable to load monthly spending.</p>";
-
-        }
-
-    }
-
-
-    /* ==========================================
-       FINANCIAL HEALTH
-    ========================================== */
-
-    async function loadFinancialHealth() {
-
-        try {
-
-            const response =
-                await fetch(
-                    API + "/financial-health"
-                );
-
-            if (!response.ok) {
-                throw new Error(
-                    "Financial health API failed"
-                );
-            }
-
-            const data =
-                await response.json();
-
-
-            document.getElementById(
-                "healthScore"
-            ).textContent =
-                data.score + " / 100";
-
-
-            document.getElementById(
-                "healthDetails"
-            ).innerHTML = `
-
-                <div>
-                    <strong>Rating:</strong>
-                    ${data.rating}
-                </div>
-
-                <div>
-                    <strong>Total Income:</strong>
-                    ${money(data.total_income)}
-                </div>
-
-                <div>
-                    <strong>Total Expenses:</strong>
-                    ${money(data.total_expenses)}
-                </div>
-
-                <div>
-                    <strong>Savings:</strong>
-                    ${money(data.savings)}
-                </div>
-
-                <div>
-                    <strong>Savings Rate:</strong>
-                    ${Number(data.savings_rate || 0).toFixed(2)}%
-                </div>
-
-            `;
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Financial health error:",
-                error
-            );
-
-            document.getElementById(
-                "healthScore"
-            ).textContent =
-                "Unable to load";
-
-        }
-
-    }
-
-
-    /* ==========================================
-       INSIGHTS
-    ========================================== */
 /* ==========================================
-   INSIGHTS
+   DASHBOARD
+========================================== */
+
+async function loadDashboard() {
+
+    try {
+
+        const response =
+            await fetch(
+                API + "/dashboard"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Dashboard API failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        document.getElementById(
+            "totalIncome"
+        ).textContent =
+            money(
+                data.total_income
+            );
+
+
+        document.getElementById(
+            "totalExpenses"
+        ).textContent =
+            money(
+                data.total_expenses
+            );
+
+
+        document.getElementById(
+            "currentBalance"
+        ).textContent =
+            money(
+                data.balance
+            );
+
+
+        document.getElementById(
+            "predictedSpending"
+        ).textContent =
+            money(
+                data.predicted_spending
+            );
+
+
+        document.getElementById(
+            "recommendedBudget"
+        ).textContent =
+            "Recommended Budget: " +
+            money(
+                data.recommended_budget
+            );
+
+
+        document.getElementById(
+            "budgetStatus"
+        ).textContent =
+            "Status: " +
+            (
+                data.budget_status ||
+                "Unknown"
+            );
+
+
+        document.getElementById(
+            "topCategory"
+        ).textContent =
+            (
+                data.top_category ||
+                "No data"
+            ) +
+            " — " +
+            money(
+                data.top_category_amount
+            );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Dashboard error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   SPENDING BY CATEGORY
+========================================== */
+
+async function loadSpendingChart() {
+
+    const container =
+        document.getElementById(
+            "categoryChart"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                API + "/categories"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Categories API failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        container.innerHTML =
+            "";
+
+
+        if (
+            !data.categories ||
+            data.categories.length === 0
+        ) {
+
+            container.innerHTML =
+                "<p>No spending data available.</p>";
+
+            return;
+
+        }
+
+
+        const maxAmount =
+            Math.max(
+                ...data.amounts.map(
+                    Number
+                )
+            );
+
+
+        data.categories.forEach(
+            function(
+                category,
+                index
+            ) {
+
+
+                const amount =
+                    Number(
+                        data.amounts[index] ||
+                        0
+                    );
+
+
+                const percentage =
+                    maxAmount > 0
+                        ? (
+                            amount /
+                            maxAmount
+                        ) * 100
+                        : 0;
+
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                row.className =
+                    "category-row";
+
+
+                row.innerHTML = `
+
+                    <div class="category-header">
+
+                        <span>
+                            ${category}
+                        </span>
+
+                        <strong>
+                            ${money(amount)}
+                        </strong>
+
+                    </div>
+
+                    <div class="bar-bg">
+
+                        <div
+                            class="bar"
+                            style="width:${percentage}%"
+                        ></div>
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(
+                    row
+                );
+
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Category chart error:",
+            error
+        );
+
+
+        container.innerHTML =
+            "<p>Unable to load category data.</p>";
+
+    }
+
+}
+
+
+/* ==========================================
+   MONTHLY SPENDING
+========================================== */
+
+async function loadMonthlyChart() {
+
+    const container =
+        document.getElementById(
+            "monthlyChart"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                API + "/monthly-spending"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Monthly spending API failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        container.innerHTML =
+            "";
+
+
+        if (
+            !data.months ||
+            data.months.length === 0
+        ) {
+
+            container.innerHTML =
+                "<p>No monthly data available.</p>";
+
+            return;
+
+        }
+
+
+        const maxAmount =
+            Math.max(
+                ...data.amounts.map(
+                    Number
+                )
+            );
+
+
+        data.months.forEach(
+            function(
+                month,
+                index
+            ) {
+
+
+                const amount =
+                    Number(
+                        data.amounts[index] ||
+                        0
+                    );
+
+
+                const percentage =
+                    maxAmount > 0
+                        ? (
+                            amount /
+                            maxAmount
+                        ) * 100
+                        : 0;
+
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                row.className =
+                    "monthly-row";
+
+
+                row.innerHTML = `
+
+                    <div class="month-name">
+                        ${month}
+                    </div>
+
+                    <div class="monthly-bar-bg">
+
+                        <div
+                            class="monthly-bar"
+                            style="width:${percentage}%"
+                        ></div>
+
+                    </div>
+
+                    <div class="month-amount">
+                        ${money(amount)}
+                    </div>
+
+                `;
+
+
+                container.appendChild(
+                    row
+                );
+
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Monthly chart error:",
+            error
+        );
+
+
+        container.innerHTML =
+            "<p>Unable to load monthly spending.</p>";
+
+    }
+
+}
+
+
+/* ==========================================
+   FINANCIAL HEALTH
+========================================== */
+
+async function loadFinancialHealth() {
+
+    try {
+
+        const response =
+            await fetch(
+                API + "/financial-health"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Financial health API failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        document.getElementById(
+            "healthScore"
+        ).textContent =
+            data.score +
+            " / 100";
+
+
+        document.getElementById(
+            "healthDetails"
+        ).innerHTML = `
+
+            <div>
+                <strong>Rating:</strong>
+                ${data.rating}
+            </div>
+
+            <div>
+                <strong>Total Income:</strong>
+                ${money(data.total_income)}
+            </div>
+
+            <div>
+                <strong>Total Expenses:</strong>
+                ${money(data.total_expenses)}
+            </div>
+
+            <div>
+                <strong>Savings:</strong>
+                ${money(data.savings)}
+            </div>
+
+            <div>
+                <strong>Savings Rate:</strong>
+                ${Number(
+                    data.savings_rate || 0
+                ).toFixed(2)}%
+            </div>
+
+        `;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Financial health error:",
+            error
+        );
+
+
+        document.getElementById(
+            "healthScore"
+        ).textContent =
+            "Unable to load";
+
+    }
+
+}
+
+
+/* ==========================================
+   AI INSIGHTS
 ========================================== */
 
 async function loadInsights() {
 
     const container =
-        document.getElementById("insights");
+        document.getElementById(
+            "insights"
+        );
+
 
     try {
 
         const response =
-            await fetch(API + "/insights");
+            await fetch(
+                API + "/insights"
+            );
+
 
         if (!response.ok) {
-            throw new Error("Insights API failed");
+
+            throw new Error(
+                "Insights API failed"
+            );
+
         }
+
 
         const data =
             await response.json();
 
-        container.innerHTML = "";
 
-        // Top category
-        const topCategory = document.createElement("div");
-        topCategory.className = "insight";
+        container.innerHTML =
+            "";
+
+
+        const topCategory =
+            document.createElement(
+                "div"
+            );
+
+
+        topCategory.className =
+            "insight";
+
+
         topCategory.textContent =
             "🏷️ Your highest spending category is " +
             data.top_category +
             " with spending of " +
-            money(data.top_category_amount) +
+            money(
+                data.top_category_amount
+            ) +
             ".";
 
-        container.appendChild(topCategory);
+
+        container.appendChild(
+            topCategory
+        );
 
 
-        // Total spending
-        const totalSpending = document.createElement("div");
-        totalSpending.className = "insight";
+        const totalSpending =
+            document.createElement(
+                "div"
+            );
+
+
+        totalSpending.className =
+            "insight";
+
+
         totalSpending.textContent =
             "💰 Your total spending is " +
-            money(data.total_spending) +
+            money(
+                data.total_spending
+            ) +
             ".";
 
-        container.appendChild(totalSpending);
+
+        container.appendChild(
+            totalSpending
+        );
 
 
-        // Spending trend
-        const trend = document.createElement("div");
-        trend.className = "insight";
+        const trend =
+            document.createElement(
+                "div"
+            );
+
+
+        trend.className =
+            "insight";
+
+
         trend.textContent =
             "📈 " +
             data.spending_trend +
             ".";
 
-        container.appendChild(trend);
+
+        container.appendChild(
+            trend
+        );
 
 
-        // Recommendation
-        const recommendation = document.createElement("div");
-        recommendation.className = "insight";
+        const recommendation =
+            document.createElement(
+                "div"
+            );
+
+
+        recommendation.className =
+            "insight";
+
+
         recommendation.textContent =
             "💡 " +
             data.recommendation;
 
-        container.appendChild(recommendation);
+
+        container.appendChild(
+            recommendation
+        );
 
     }
 
@@ -1176,127 +1600,67 @@ async function loadInsights() {
             error
         );
 
-        container.innerHTML =
-            `<div class="insight">
-                Financial insights are currently unavailable.
-            </div>`;
+
+        container.innerHTML = `
+
+            <div class="insight">
+
+                Financial insights are
+                currently unavailable.
+
+            </div>
+
+        `;
+
     }
+
 }
-    /* ==========================================
-       TRANSACTIONS
-    ========================================== */
 
-    async function loadTransactions() {
 
-        const tbody =
-            document.getElementById(
-                "transactionsBody"
+/* ==========================================
+   LOAD TRANSACTIONS
+========================================== */
+
+async function loadTransactions() {
+
+    const tbody =
+        document.getElementById(
+            "transactionsBody"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                API + "/transactions"
             );
 
-        try {
 
-            const response =
-                await fetch(
-                    API + "/transactions"
-                );
+        if (!response.ok) {
 
-            if (!response.ok) {
-                throw new Error(
-                    "Transactions API failed"
-                );
-            }
-
-            const data =
-                await response.json();
-
-
-            tbody.innerHTML = "";
-
-
-            const transactions =
-                data.transactions || [];
-
-
-            if (transactions.length === 0) {
-
-                tbody.innerHTML = `
-
-                    <tr>
-
-                        <td
-                            colspan="5"
-                            class="loading"
-                        >
-                            No transactions found.
-                        </td>
-
-                    </tr>
-
-                `;
-
-                return;
-            }
-
-
-            transactions.forEach(
-                function(transaction) {
-
-                    const row =
-                        document.createElement(
-                            "tr"
-                        );
-
-
-                    const type =
-                        String(
-                            transaction.type || ""
-                        ).toLowerCase();
-
-
-                    const amountClass =
-                        type === "income"
-                            ? "income"
-                            : "expense";
-
-
-                    row.innerHTML = `
-
-                        <td>
-                            ${transaction.date || ""}
-                        </td>
-
-                        <td>
-                            ${transaction.merchant || ""}
-                        </td>
-
-                        <td class="${amountClass}">
-                            ${money(transaction.amount)}
-                        </td>
-
-                        <td>
-                            ${transaction.type || ""}
-                        </td>
-
-                        <td>
-                            ${transaction.category || ""}
-                        </td>
-
-                    `;
-
-
-                    tbody.appendChild(row);
-
-                }
+            throw new Error(
+                "Transactions API failed"
             );
 
         }
 
-        catch (error) {
 
-            console.error(
-                "Transactions error:",
-                error
-            );
+        const data =
+            await response.json();
+
+
+        const transactions =
+            data.transactions || [];
+
+
+        tbody.innerHTML =
+            "";
+
+
+        if (
+            transactions.length === 0
+        ) {
 
             tbody.innerHTML = `
 
@@ -1306,258 +1670,544 @@ async function loadInsights() {
                         colspan="5"
                         class="loading"
                     >
-                        Unable to load transactions.
+                        No transactions found.
                     </td>
 
                 </tr>
 
             `;
 
+            return;
+
         }
 
-    }
+
+        transactions.forEach(
+            function(transaction) {
 
 
-    /* ==========================================
-       ADD TRANSACTION
-    ========================================== */
-
-    document
-        .getElementById("transactionForm")
-        .addEventListener(
-            "submit",
-            async function(event) {
-
-                event.preventDefault();
-
-
-                const date =
-                    document
-                        .getElementById("date")
-                        .value;
-
-
-                const merchant =
-                    document
-                        .getElementById("merchant")
-                        .value
-                        .trim();
-
-
-                const amount =
-                    document
-                        .getElementById("amount")
-                        .value;
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
 
 
                 const type =
-                    document
-                        .getElementById("type")
-                        .value;
+                    String(
+                        transaction.type || ""
+                    ).toLowerCase();
 
 
-                /* IMPORTANT:
-                   NEW UNIQUE CATEGORY ID
-                */
-
-                const category =
-                    document
-                        .getElementById(
-                            "transactionCategory"
-                        )
-                        .value;
+                const amountClass =
+                    type === "income"
+                        ? "income"
+                        : "expense";
 
 
-                const message =
-                    document.getElementById(
-                        "message"
+                row.innerHTML = `
+
+                    <td>
+                        ${transaction.date || ""}
+                    </td>
+
+                    <td>
+                        ${transaction.merchant || ""}
+                    </td>
+
+                    <td class="${amountClass}">
+                        ${money(
+                            transaction.amount
+                        )}
+                    </td>
+
+                    <td>
+                        ${transaction.type || ""}
+                    </td>
+
+                    <td>
+                        ${transaction.category || ""}
+                    </td>
+
+                `;
+
+
+                /* STORE VALUES FOR FILTERING */
+
+                row.dataset.merchant =
+                    String(
+                        transaction.merchant || ""
+                    ).toLowerCase();
+
+
+                row.dataset.category =
+                    String(
+                        transaction.category || ""
                     );
 
 
-                const submitBtn =
-                    document.getElementById(
-                        "submitBtn"
-                    );
-
-
-                /* VALIDATION */
-
-                if (
-                    !date ||
-                    !merchant ||
-                    !amount ||
-                    !type ||
-                    !category
-                ) {
-
-                    message.textContent =
-                        "Please fill all fields.";
-
-                    message.className =
-                        "error";
-
-                    return;
-
-                }
-
-
-                const body = {
-
-                    date: date,
-
-                    merchant: merchant,
-
-                    amount: Number(amount),
-
-                    type: type,
-
-                    category: category
-
-                };
-
-
-                submitBtn.disabled = true;
-
-                submitBtn.textContent =
-                    "Adding Transaction...";
-
-
-                message.className = "";
-
-                message.textContent = "";
-
-
-                try {
-
-                    const response =
-                        await fetch(
-                            API + "/add-transaction",
-                            {
-
-                                method: "POST",
-
-                                headers: {
-
-                                    "Content-Type":
-                                        "application/json"
-
-                                },
-
-                                body:
-                                    JSON.stringify(body)
-
-                            }
-                        );
-
-
-                    const data =
-                        await response.json();
-
-
-                    if (!response.ok) {
-
-                        throw new Error(
-
-                            data.message ||
-                            data.error ||
-                            "Failed to add transaction"
-
-                        );
-
-                    }
-
-
-                    /* SUCCESS */
-
-                    message.textContent =
-                        data.message ||
-                        "Transaction added successfully!";
-
-                    message.className =
-                        "success";
-
-
-                    /* CLEAR FORM */
-
-                    document
-                        .getElementById(
-                            "transactionForm"
-                        )
-                        .reset();
-
-
-                    /* REFRESH DASHBOARD */
-
-                    await loadDashboard();
-
-                    await loadSpendingChart();
-
-                    await loadMonthlyChart();
-
-                    await loadFinancialHealth();
-
-                    await loadInsights();
-
-                    await loadTransactions();
-
-                }
-
-                catch (error) {
-
-                    console.error(
-                        "Add transaction error:",
-                        error
-                    );
-
-
-                    message.textContent =
-                        "Error: " +
-                        error.message;
-
-
-                    message.className =
-                        "error";
-
-                }
-
-                finally {
-
-                    submitBtn.disabled =
-                        false;
-
-                    submitBtn.textContent =
-                        "Add Transaction";
-
-                }
+                row.dataset.type =
+                    String(
+                        transaction.type || ""
+                    ).toLowerCase();
+
+
+                tbody.appendChild(
+                    row
+                );
 
             }
         );
 
+    }
 
-    /* ==========================================
-       INITIAL LOAD
-    ========================================== */
+    catch (error) {
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        function() {
+        console.error(
+            "Transactions error:",
+            error
+        );
 
-            loadDashboard();
 
-            loadSpendingChart();
+        tbody.innerHTML = `
 
-            loadMonthlyChart();
+            <tr>
 
-            loadFinancialHealth();
+                <td
+                    colspan="5"
+                    class="loading"
+                >
+                    Unable to load transactions.
+                </td>
 
-            loadInsights();
+            </tr>
 
-            loadTransactions();
+        `;
+
+    }
+
+}
+
+
+/* ==========================================
+   FILTER TRANSACTIONS
+========================================== */
+
+function filterTransactions() {
+
+
+    const search =
+        document
+            .getElementById(
+                "searchTransaction"
+            )
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    const category =
+        document
+            .getElementById(
+                "filterCategory"
+            )
+            .value;
+
+
+    const type =
+        document
+            .getElementById(
+                "filterType"
+            )
+            .value
+            .toLowerCase();
+
+
+    const rows =
+        document.querySelectorAll(
+            "#transactionsBody tr"
+        );
+
+
+    rows.forEach(
+        function(row) {
+
+
+            const merchant =
+                row.dataset.merchant ||
+                "";
+
+
+            const rowCategory =
+                row.dataset.category ||
+                "";
+
+
+            const rowType =
+                row.dataset.type ||
+                "";
+
+
+            const matchesSearch =
+                merchant.includes(
+                    search
+                );
+
+
+            const matchesCategory =
+                !category ||
+                rowCategory === category;
+
+
+            const matchesType =
+                !type ||
+                rowType === type;
+
+
+            if (
+                matchesSearch &&
+                matchesCategory &&
+                matchesType
+            ) {
+
+                row.style.display =
+                    "";
+
+            }
+
+            else {
+
+                row.style.display =
+                    "none";
+
+            }
 
         }
     );
 
+}
+
+
+/* ==========================================
+   ADD TRANSACTION
+========================================== */
+
+document
+    .getElementById(
+        "transactionForm"
+    )
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+
+            event.preventDefault();
+
+
+            const date =
+                document
+                    .getElementById(
+                        "date"
+                    )
+                    .value;
+
+
+            const merchant =
+                document
+                    .getElementById(
+                        "merchant"
+                    )
+                    .value
+                    .trim();
+
+
+            const amount =
+                document
+                    .getElementById(
+                        "amount"
+                    )
+                    .value;
+
+
+            const type =
+                document
+                    .getElementById(
+                        "type"
+                    )
+                    .value;
+
+
+            const category =
+                document
+                    .getElementById(
+                        "transactionCategory"
+                    )
+                    .value;
+
+
+            const message =
+                document.getElementById(
+                    "message"
+                );
+
+
+            const submitBtn =
+                document.getElementById(
+                    "submitBtn"
+                );
+
+
+            /* VALIDATION */
+
+            if (
+                !date ||
+                !merchant ||
+                !amount ||
+                !type ||
+                !category
+            ) {
+
+                message.textContent =
+                    "Please fill all fields.";
+
+                message.className =
+                    "error";
+
+                return;
+
+            }
+
+
+            const body = {
+
+                date: date,
+
+                merchant: merchant,
+
+                amount:
+                    Number(amount),
+
+                type: type,
+
+                category: category
+
+            };
+
+
+            submitBtn.disabled =
+                true;
+
+
+            submitBtn.textContent =
+                "Adding Transaction...";
+
+
+            message.className =
+                "";
+
+            message.textContent =
+                "";
+
+
+            try {
+
+
+                const response =
+                    await fetch(
+                        API +
+                        "/add-transaction",
+                        {
+
+                            method:
+                                "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    body
+                                )
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+
+                        data.message ||
+                        data.error ||
+                        "Failed to add transaction"
+
+                    );
+
+                }
+
+
+                /* SUCCESS */
+
+                message.textContent =
+                    data.message ||
+                    "Transaction added successfully!";
+
+
+                message.className =
+                    "success";
+
+
+                /* CLEAR FORM */
+
+                document
+                    .getElementById(
+                        "transactionForm"
+                    )
+                    .reset();
+
+
+                /* REFRESH EVERYTHING */
+
+                await loadDashboard();
+
+                await loadSpendingChart();
+
+                await loadMonthlyChart();
+
+                await loadFinancialHealth();
+
+                await loadInsights();
+
+                await loadTransactions();
+
+
+                /* CLEAR FILTERS */
+
+                document
+                    .getElementById(
+                        "searchTransaction"
+                    )
+                    .value = "";
+
+
+                document
+                    .getElementById(
+                        "filterCategory"
+                    )
+                    .value = "";
+
+
+                document
+                    .getElementById(
+                        "filterType"
+                    )
+                    .value = "";
+
+
+            }
+
+            catch (error) {
+
+
+                console.error(
+                    "Add transaction error:",
+                    error
+                );
+
+
+                message.textContent =
+                    "Error: " +
+                    error.message;
+
+
+                message.className =
+                    "error";
+
+            }
+
+            finally {
+
+
+                submitBtn.disabled =
+                    false;
+
+
+                submitBtn.textContent =
+                    "Add Transaction";
+
+            }
+
+        }
+    );
+
+
+/* ==========================================
+   FILTER EVENTS
+========================================== */
+
+document
+    .getElementById(
+        "searchTransaction"
+    )
+    .addEventListener(
+        "input",
+        filterTransactions
+    );
+
+
+document
+    .getElementById(
+        "filterCategory"
+    )
+    .addEventListener(
+        "change",
+        filterTransactions
+    );
+
+
+document
+    .getElementById(
+        "filterType"
+    )
+    .addEventListener(
+        "change",
+        filterTransactions
+    );
+
+
+/* ==========================================
+   INITIAL LOAD
+========================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadDashboard();
+
+        loadSpendingChart();
+
+        loadMonthlyChart();
+
+        loadFinancialHealth();
+
+        loadInsights();
+
+        loadTransactions();
+
+    }
+);
+
 </script>
 
+
 </body>
+
 </html>
