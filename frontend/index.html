@@ -642,6 +642,8 @@
                         <th>Amount</th>
                         <th>Type</th>
                         <th>Category</th>
+                        <th>Action</th>
+    
                     </tr>
 
                 </thead>
@@ -1098,109 +1100,88 @@
     /* ==========================================
        INSIGHTS
     ========================================== */
+/* ==========================================
+   INSIGHTS
+========================================== */
 
-    async function loadInsights() {
+async function loadInsights() {
 
-        const container =
-            document.getElementById(
-                "insights"
-            );
+    const container =
+        document.getElementById("insights");
 
-        try {
+    try {
 
-            const response =
-                await fetch(
-                    API + "/insights"
-                );
+        const response =
+            await fetch(API + "/insights");
 
-            if (!response.ok) {
-                throw new Error(
-                    "Insights API failed"
-                );
-            }
-
-            const data =
-                await response.json();
-
-
-            container.innerHTML = "";
-
-
-            let insights = [];
-
-
-            if (Array.isArray(data)) {
-
-                insights = data;
-
-            }
-
-            else if (
-                Array.isArray(data.insights)
-            ) {
-
-                insights = data.insights;
-
-            }
-
-            else if (data.message) {
-
-                insights = [data.message];
-
-            }
-
-
-            if (insights.length === 0) {
-
-                container.innerHTML =
-                    `<div class="insight">
-                        No new insights available.
-                    </div>`;
-
-                return;
-            }
-
-
-            insights.forEach(
-                function(item) {
-
-                    const div =
-                        document.createElement(
-                            "div"
-                        );
-
-                    div.className =
-                        "insight";
-
-                    div.textContent =
-                        typeof item === "string"
-                            ? item
-                            : JSON.stringify(item);
-
-                    container.appendChild(div);
-
-                }
-            );
-
+        if (!response.ok) {
+            throw new Error("Insights API failed");
         }
 
-        catch (error) {
+        const data =
+            await response.json();
 
-            console.error(
-                "Insights error:",
-                error
-            );
+        container.innerHTML = "";
 
-            container.innerHTML =
-                `<div class="insight">
-                    Financial insights are currently unavailable.
-                </div>`;
+        // Top category
+        const topCategory = document.createElement("div");
+        topCategory.className = "insight";
+        topCategory.textContent =
+            "🏷️ Your highest spending category is " +
+            data.top_category +
+            " with spending of " +
+            money(data.top_category_amount) +
+            ".";
 
-        }
+        container.appendChild(topCategory);
+
+
+        // Total spending
+        const totalSpending = document.createElement("div");
+        totalSpending.className = "insight";
+        totalSpending.textContent =
+            "💰 Your total spending is " +
+            money(data.total_spending) +
+            ".";
+
+        container.appendChild(totalSpending);
+
+
+        // Spending trend
+        const trend = document.createElement("div");
+        trend.className = "insight";
+        trend.textContent =
+            "📈 " +
+            data.spending_trend +
+            ".";
+
+        container.appendChild(trend);
+
+
+        // Recommendation
+        const recommendation = document.createElement("div");
+        recommendation.className = "insight";
+        recommendation.textContent =
+            "💡 " +
+            data.recommendation;
+
+        container.appendChild(recommendation);
 
     }
 
+    catch (error) {
 
+        console.error(
+            "Insights error:",
+            error
+        );
+
+        container.innerHTML =
+            `<div class="insight">
+                Financial insights are currently unavailable.
+            </div>`;
+    }
+}
     /* ==========================================
        TRANSACTIONS
     ========================================== */
