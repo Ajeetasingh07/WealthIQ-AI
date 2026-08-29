@@ -1,4 +1,7 @@
 import os
+import re
+import uuid
+
 import pandas as pd
 
 from flask import Flask, jsonify, request, send_file
@@ -15,7 +18,7 @@ CORS(app)
 
 
 # ============================================================
-# FILE PATH
+# PATHS
 # ============================================================
 
 BASE_DIR = os.path.dirname(
@@ -24,11 +27,33 @@ BASE_DIR = os.path.dirname(
     )
 )
 
-DATA_FILE = os.path.join(
+DATA_DIR = os.path.join(
     BASE_DIR,
-    "data",
-    "transactions.csv"
+    "data"
 )
+
+USERS_DIR = os.path.join(
+    DATA_DIR,
+    "users"
+)
+
+os.makedirs(
+    USERS_DIR,
+    exist_ok=True
+)
+
+
+# ============================================================
+# EMPTY USER DATA
+# ============================================================
+
+COLUMNS = [
+    "date",
+    "merchant",
+    "amount",
+    "type",
+    "category"
+]
 
 
 # ============================================================
@@ -37,7 +62,9 @@ DATA_FILE = os.path.join(
 
 def get_category(merchant):
 
-    merchant = str(merchant).lower().strip()
+    merchant = str(
+        merchant
+    ).lower().strip()
 
     if merchant in [
         "swiggy",
@@ -86,18 +113,105 @@ def get_category(merchant):
 
 
 # ============================================================
-# LOAD DATA
+# USER ID
+# ============================================================
+
+def get_user_id():
+
+    user_id = request.headers.get(
+        "X-User-ID"
+    )
+
+    if not user_id:
+
+        return None
+
+    user_id = str(
+        user_id
+    ).strip()
+
+    if len(user_id) > 100:
+        return None
+
+    if not re.match(
+        r"^[a-zA-Z0-9_-]+$",
+        user_id
+    ):
+        return None
+
+    return user_id
+
+
+# ============================================================
+# USER FILE
+# ============================================================
+
+def get_user_file():
+
+    user_id = get_user_id()
+
+    if not user_id:
+
+        raise ValueError(
+            "User profile not found. Please create a profile."
+        )
+
+    return os.path.join(
+        USERS_DIR,
+        f"{user_id}.csv"
+    )
+
+
+# ============================================================
+# CREATE USER DATA
+# ============================================================
+
+def create_user_file(user_id):
+
+    if not re.match(
+        r"^[a-zA-Z0-9_-]+$",
+        user_id
+    ):
+        raise ValueError(
+            "Invalid user ID"
+        )
+
+    file_path = os.path.join(
+        USERS_DIR,
+        f"{user_id}.csv"
+    )
+
+    if not os.path.exists(file_path):
+
+        empty_df = pd.DataFrame(
+            columns=COLUMNS
+        )
+
+        empty_df.to_csv(
+            file_path,
+            index=False
+        )
+
+    return file_path
+
+
+# ============================================================
+# LOAD CURRENT USER DATA
 # ============================================================
 
 def load_data():
 
-    if not os.path.exists(DATA_FILE):
+    file_path = get_user_file()
 
-        raise FileNotFoundError(
-            f"Dataset not found: {DATA_FILE}"
+    if not os.path.exists(file_path):
+
+        create_user_file(
+            get_user_id()
         )
 
-    df = pd.read_csv(DATA_FILE)
+    df = pd.read_csv(
+        file_path
+    )
 
     df.columns = (
         df.columns
@@ -105,17 +219,70 @@ def load_data():
         .str.lower()
     )
 
-    if "category" not in df.columns:
+    for column in COLUMNS:
 
-        df["category"] = df[
-            "merchant"
-        ].apply(get_category)
+        if column not in df.columns:
+
+            df[column] = ""
+
+    df = df[COLUMNS]
+
+    if len(df) > 0:
+
+        df["amount"] = pd.to_numeric(
+            df["amount"],
+            errors="coerce"
+        ).fillna(0)
+
+        df["type"] = (
+            df["type"]
+            .astype(str)
+            .str.lower()
+            .str.strip()
+        )
+
+        missing_category = (
+            df["category"]
+            .astype(str)
+            .str.strip()
+            .isin([
+                "",
+                "nan",
+                "None"
+            ])
+        )
+
+        if missing_category.any():
+
+            df.loc[
+                missing_category,
+                "category"
+            ] = df.loc[
+                missing_category,
+                "merchant"
+            ].apply(
+                get_category
+            )
 
     return df
 
 
 # ============================================================
-# HOME API
+# SAVE CURRENT USER DATA
+# ============================================================
+
+def save_data(df):
+
+    file_path = get_user_file()
+
+    df.to_csv(
+        file_path,
+        index=False
+    )
+
+
+# ============================================================
+# HOME
 # ============================================================
 
 @app.route("/")
@@ -136,7 +303,105 @@ def home():
 
 
 # ============================================================
-# DASHBOARD API
+# CREATE PROFILE
+# ============================================================
+
+@app.route(
+    "/create-profile",
+    methods=["POST"]
+)
+def create_profile():
+
+    try:
+
+        new_user_id = str(
+            uuid.uuid4()
+        )
+
+        create_user_file(
+            new_user_id
+        )
+
+        return jsonify({
+
+            "message":
+                "New financial profile created.",
+
+            "user_id":
+                new_user_id
+
+        }), 201
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+                "Unable to create profile",
+
+            "message":
+                str(e)
+
+        }), 500
+
+
+# ============================================================
+# PROFILE CHECK
+# ============================================================
+
+@app.route(
+    "/profile",
+    methods=["GET"]
+)
+def profile():
+
+    try:
+
+        user_id = get_user_id()
+
+        if not user_id:
+
+            return jsonify({
+
+                "profile_exists":
+                    False,
+
+                "message":
+                    "No user profile found."
+
+            })
+
+        file_path = os.path.join(
+            USERS_DIR,
+            f"{user_id}.csv"
+        )
+
+        exists = os.path.exists(
+            file_path
+        )
+
+        return jsonify({
+
+            "profile_exists":
+                exists,
+
+            "user_id":
+                user_id
+
+        })
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+                str(e)
+
+        }), 500
+
+
+# ============================================================
+# DASHBOARD
 # ============================================================
 
 @app.route("/dashboard")
@@ -146,51 +411,66 @@ def dashboard():
 
         df = load_data()
 
-        df["amount"] = pd.to_numeric(
-            df["amount"],
-            errors="coerce"
-        )
-
         income = df[
-            df["type"].str.lower() == "income"
+            df["type"] == "income"
         ]["amount"].sum()
 
         expenses = df[
-            df["type"].str.lower() == "expense"
+            df["type"] == "expense"
         ]["amount"].sum()
 
-        balance = income - expenses
+        balance = (
+            income -
+            expenses
+        )
 
         expense_df = df[
-            df["type"].str.lower() == "expense"
+            df["type"] == "expense"
         ]
 
         if len(expense_df) > 0:
 
             predicted_spending = (
                 expense_df["amount"].mean()
-                * min(len(expense_df), 30)
+                *
+                min(
+                    len(expense_df),
+                    30
+                )
             )
 
         else:
 
             predicted_spending = 0
 
+
         recommended_budget = (
-            predicted_spending * 1.10
+            predicted_spending *
+            1.10
         )
+
 
         if expenses <= recommended_budget:
 
-            budget_status = "Within Budget"
+            budget_status = (
+                "Within Budget"
+            )
 
         else:
 
-            budget_status = "Over Budget"
+            budget_status = (
+                "Over Budget"
+            )
 
-        category_df = expense_df.groupby(
-            "category"
-        )["amount"].sum()
+
+        category_df = (
+            expense_df
+            .groupby("category")[
+                "amount"
+            ]
+            .sum()
+        )
+
 
         if len(category_df) > 0:
 
@@ -208,6 +488,7 @@ def dashboard():
 
             top_category_amount = 0
 
+
         return jsonify({
 
             "total_income":
@@ -220,21 +501,43 @@ def dashboard():
                 float(balance),
 
             "predicted_spending":
-                float(predicted_spending),
+                float(
+                    predicted_spending
+                ),
 
             "recommended_budget":
-                float(recommended_budget),
+                float(
+                    recommended_budget
+                ),
 
             "budget_status":
                 budget_status,
 
             "top_category":
-                str(top_category),
+                str(
+                    top_category
+                ),
 
             "top_category_amount":
-                float(top_category_amount)
+                float(
+                    top_category_amount
+                )
 
         })
+
+
+    except ValueError as e:
+
+        return jsonify({
+
+            "error":
+                "Profile required",
+
+            "message":
+                str(e)
+
+        }), 400
+
 
     except Exception as e:
 
@@ -250,7 +553,7 @@ def dashboard():
 
 
 # ============================================================
-# CATEGORY API
+# CATEGORIES
 # ============================================================
 
 @app.route("/categories")
@@ -261,12 +564,14 @@ def categories():
         df = load_data()
 
         expense_df = df[
-            df["type"].str.lower() == "expense"
+            df["type"] == "expense"
         ]
 
         category_data = (
             expense_df
-            .groupby("category")["amount"]
+            .groupby("category")[
+                "amount"
+            ]
             .sum()
             .sort_values(
                 ascending=False
@@ -302,7 +607,7 @@ def categories():
 
 
 # ============================================================
-# MONTHLY SPENDING API
+# MONTHLY SPENDING
 # ============================================================
 
 @app.route("/monthly-spending")
@@ -317,13 +622,8 @@ def monthly_spending():
             errors="coerce"
         )
 
-        df["amount"] = pd.to_numeric(
-            df["amount"],
-            errors="coerce"
-        )
-
         expense_df = df[
-            df["type"].str.lower() == "expense"
+            df["type"] == "expense"
         ].copy()
 
         expense_df["month"] = (
@@ -334,7 +634,9 @@ def monthly_spending():
 
         monthly = (
             expense_df
-            .groupby("month")["amount"]
+            .groupby("month")[
+                "amount"
+            ]
             .sum()
             .sort_index()
         )
@@ -368,7 +670,7 @@ def monthly_spending():
 
 
 # ============================================================
-# INSIGHTS API
+# INSIGHTS
 # ============================================================
 
 @app.route("/insights")
@@ -378,13 +680,8 @@ def insights():
 
         df = load_data()
 
-        df["amount"] = pd.to_numeric(
-            df["amount"],
-            errors="coerce"
-        )
-
         expense_df = df[
-            df["type"].str.lower() == "expense"
+            df["type"] == "expense"
         ]
 
         total_spending = (
@@ -393,7 +690,9 @@ def insights():
 
         category_data = (
             expense_df
-            .groupby("category")["amount"]
+            .groupby("category")[
+                "amount"
+            ]
             .sum()
             .sort_values(
                 ascending=False
@@ -416,19 +715,29 @@ def insights():
 
             top_category_amount = 0
 
+
         if len(expense_df) >= 2:
 
             first_half = (
-                expense_df["amount"]
-                .iloc[:len(expense_df)//2]
+                expense_df[
+                    "amount"
+                ]
+                .iloc[
+                    :len(expense_df)//2
+                ]
                 .sum()
             )
 
             second_half = (
-                expense_df["amount"]
-                .iloc[len(expense_df)//2:]
+                expense_df[
+                    "amount"
+                ]
+                .iloc[
+                    len(expense_df)//2:
+                ]
                 .sum()
             )
+
 
             if second_half > first_half:
 
@@ -475,16 +784,23 @@ def insights():
                 "to generate better insights."
             )
 
+
         return jsonify({
 
             "total_spending":
-                float(total_spending),
+                float(
+                    total_spending
+                ),
 
             "top_category":
-                str(top_category),
+                str(
+                    top_category
+                ),
 
             "top_category_amount":
-                float(top_category_amount),
+                float(
+                    top_category_amount
+                ),
 
             "spending_trend":
                 spending_trend,
@@ -493,6 +809,7 @@ def insights():
                 recommendation
 
         })
+
 
     except Exception as e:
 
@@ -508,7 +825,7 @@ def insights():
 
 
 # ============================================================
-# RECENT TRANSACTIONS API
+# TRANSACTIONS
 # ============================================================
 
 @app.route("/transactions")
@@ -518,45 +835,9 @@ def transactions():
 
         df = load_data()
 
-        required_columns = [
-            "date",
-            "merchant",
-            "amount",
-            "type",
-            "category"
-        ]
-
-        missing_columns = [
-            column
-            for column in required_columns
-            if column not in df.columns
-        ]
-
-        if missing_columns:
-
-            return jsonify({
-
-                "error":
-                    "Missing columns in dataset",
-
-                "missing_columns":
-                    missing_columns,
-
-                "available_columns":
-                    df.columns.tolist()
-
-            }), 400
-
-        recent = df.tail(10).copy()
-
-        recent["amount"] = pd.to_numeric(
-            recent["amount"],
-            errors="coerce"
-        )
-
-        recent["date"] = (
-            recent["date"]
-            .astype(str)
+        recent = (
+            df.tail(10)
+            .copy()
         )
 
         records = []
@@ -582,6 +863,7 @@ def transactions():
 
             })
 
+
         return jsonify({
 
             "transactions":
@@ -603,7 +885,7 @@ def transactions():
 
 
 # ============================================================
-# ADD NEW TRANSACTION API
+# ADD TRANSACTION
 # ============================================================
 
 @app.route(
@@ -625,6 +907,7 @@ def add_transaction():
 
             }), 400
 
+
         required_fields = [
             "date",
             "merchant",
@@ -633,6 +916,7 @@ def add_transaction():
             "category"
         ]
 
+
         missing_fields = [
 
             field
@@ -640,9 +924,13 @@ def add_transaction():
             for field in required_fields
 
             if field not in data
-            or str(data[field]).strip() == ""
+
+            or str(
+                data[field]
+            ).strip() == ""
 
         ]
+
 
         if missing_fields:
 
@@ -656,27 +944,16 @@ def add_transaction():
 
             }), 400
 
-        try:
 
-            amount = float(
-                data["amount"]
-            )
+        amount = float(
+            data["amount"]
+        )
 
-        except (
-            ValueError,
-            TypeError
-        ):
-
-            return jsonify({
-
-                "error":
-                    "Amount must be a number"
-
-            }), 400
 
         transaction_type = str(
             data["type"]
         ).lower().strip()
+
 
         if transaction_type not in [
             "income",
@@ -690,32 +967,21 @@ def add_transaction():
 
             }), 400
 
-        current_df = pd.read_csv(
-            DATA_FILE
-        )
 
-        current_df.columns = (
-            current_df
-            .columns
-            .str.strip()
-            .str.lower()
-        )
+        df = load_data()
 
-        if "category" not in current_df.columns:
-
-            current_df["category"] = (
-                current_df["merchant"]
-                .apply(get_category)
-            )
 
         new_transaction = pd.DataFrame([{
 
             "date":
-                str(data["date"]),
+                str(
+                    data["date"]
+                ),
 
             "merchant":
-                str(data["merchant"])
-                .strip(),
+                str(
+                    data["merchant"]
+                ).strip(),
 
             "amount":
                 amount,
@@ -724,15 +990,17 @@ def add_transaction():
                 transaction_type,
 
             "category":
-                str(data["category"])
-                .strip()
+                str(
+                    data["category"]
+                ).strip()
 
         }])
+
 
         updated_df = pd.concat(
 
             [
-                current_df,
+                df,
                 new_transaction
             ],
 
@@ -740,39 +1008,37 @@ def add_transaction():
 
         )
 
-        updated_df.to_csv(
 
-            DATA_FILE,
-
-            index=False
-
+        save_data(
+            updated_df
         )
+
 
         return jsonify({
 
             "message":
                 "Transaction added successfully",
 
-            "transaction": {
-
-                "date":
-                    str(data["date"]),
-
-                "merchant":
-                    str(data["merchant"]),
-
-                "amount":
-                    amount,
-
-                "type":
-                    transaction_type,
-
-                "category":
-                    str(data["category"])
-
-            }
+            "transaction":
+                new_transaction
+                .iloc[0]
+                .to_dict()
 
         }), 201
+
+
+    except ValueError as e:
+
+        return jsonify({
+
+            "error":
+                "Invalid request",
+
+            "message":
+                str(e)
+
+        }), 400
+
 
     except Exception as e:
 
@@ -788,7 +1054,7 @@ def add_transaction():
 
 
 # ============================================================
-# FINANCIAL HEALTH SCORE API
+# FINANCIAL HEALTH
 # ============================================================
 
 @app.route("/financial-health")
@@ -798,40 +1064,57 @@ def financial_health():
 
         df = load_data()
 
-        df["amount"] = pd.to_numeric(
-            df["amount"],
-            errors="coerce"
-        )
-
         income = df[
-            df["type"].str.lower() == "income"
+            df["type"] == "income"
         ]["amount"].sum()
 
         expenses = df[
-            df["type"].str.lower() == "expense"
+            df["type"] == "expense"
         ]["amount"].sum()
+
 
         if income <= 0:
 
             return jsonify({
 
-                "score": 0,
+                "score":
+                    0,
 
                 "rating":
                     "Insufficient Data",
 
+                "total_income":
+                    0,
+
+                "total_expenses":
+                    float(expenses),
+
+                "savings":
+                    -float(expenses),
+
+                "savings_rate":
+                    0,
+
                 "message":
-                    "Add income transactions to calculate your financial health."
+                    "Add your income transactions to calculate your financial health."
 
             })
 
-        savings = income - expenses
+
+        savings = (
+            income -
+            expenses
+        )
+
 
         savings_rate = (
-            savings / income
+            savings /
+            income
         ) * 100
 
+
         score = 100
+
 
         if savings_rate < 0:
 
@@ -845,10 +1128,15 @@ def financial_health():
 
             score -= 15
 
+
         score = max(
             0,
-            min(100, score)
+            min(
+                100,
+                score
+            )
         )
+
 
         if score >= 80:
 
@@ -864,7 +1152,10 @@ def financial_health():
 
         else:
 
-            rating = "Needs Improvement"
+            rating = (
+                "Needs Improvement"
+            )
+
 
         return jsonify({
 
@@ -885,7 +1176,9 @@ def financial_health():
 
             "savings_rate":
                 round(
-                    float(savings_rate),
+                    float(
+                        savings_rate
+                    ),
                     2
                 ),
 
@@ -893,6 +1186,7 @@ def financial_health():
                 "Financial health calculated successfully."
 
         })
+
 
     except Exception as e:
 
@@ -908,29 +1202,30 @@ def financial_health():
 
 
 # ============================================================
-# EXPORT TRANSACTIONS API
+# EXPORT CURRENT USER
 # ============================================================
 
 @app.route(
-    "/export-transactions",
-    methods=["GET"]
+    "/export-transactions"
 )
 def export_transactions():
 
     try:
 
-        if not os.path.exists(DATA_FILE):
+        file_path = get_user_file()
 
-            return jsonify({
+        if not os.path.exists(
+            file_path
+        ):
 
-                "error":
-                    "Transaction file not found"
+            create_user_file(
+                get_user_id()
+            )
 
-            }), 404
 
         return send_file(
 
-            DATA_FILE,
+            file_path,
 
             mimetype="text/csv",
 
@@ -941,12 +1236,71 @@ def export_transactions():
 
         )
 
+
     except Exception as e:
 
         return jsonify({
 
             "error":
                 "Failed to export transactions",
+
+            "message":
+                str(e)
+
+        }), 500
+
+
+# ============================================================
+# RESET CURRENT USER
+# ============================================================
+
+@app.route(
+    "/reset-transactions",
+    methods=["POST"]
+)
+def reset_transactions():
+
+    try:
+
+        user_id = get_user_id()
+
+        file_path = get_user_file()
+
+
+        empty_df = pd.DataFrame(
+            columns=COLUMNS
+        )
+
+
+        empty_df.to_csv(
+            file_path,
+            index=False
+        )
+
+
+        return jsonify({
+
+            "message":
+                "Financial profile reset successfully.",
+
+            "total_income":
+                0,
+
+            "total_expenses":
+                0,
+
+            "balance":
+                0
+
+        })
+
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+                "Unable to reset financial profile.",
 
             "message":
                 str(e)

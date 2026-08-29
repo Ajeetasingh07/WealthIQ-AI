@@ -2,3 +2,12 @@ venv/
 __pycache__/
 *.pyc
 .env
+
+frontend/Downloads/
+frontend/Downloads - Copy/
+data/*_backup.csv
+data/*_before_reset.csv
+backend/*_backup.py
+frontend/*_backup.html
+frontend/*_old.html
+python

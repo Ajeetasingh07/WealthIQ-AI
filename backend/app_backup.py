@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 
 
@@ -79,11 +79,9 @@ def get_category(merchant):
         return "Housing"
 
     elif merchant == "salary":
-
         return "Income"
 
     else:
-
         return "Other"
 
 
@@ -101,15 +99,11 @@ def load_data():
 
     df = pd.read_csv(DATA_FILE)
 
-    # Clean column names
-
     df.columns = (
         df.columns
         .str.strip()
         .str.lower()
     )
-
-    # Make sure category exists
 
     if "category" not in df.columns:
 
@@ -152,30 +146,20 @@ def dashboard():
 
         df = load_data()
 
-        # Convert amount to numeric
-
         df["amount"] = pd.to_numeric(
             df["amount"],
             errors="coerce"
         )
 
-        # Income
-
         income = df[
             df["type"].str.lower() == "income"
         ]["amount"].sum()
-
-        # Expenses
 
         expenses = df[
             df["type"].str.lower() == "expense"
         ]["amount"].sum()
 
-        # Balance
-
         balance = income - expenses
-
-        # Simple predicted spending
 
         expense_df = df[
             df["type"].str.lower() == "expense"
@@ -184,16 +168,13 @@ def dashboard():
         if len(expense_df) > 0:
 
             predicted_spending = (
-                expense_df["amount"]
-                .mean() *
-                min(len(expense_df), 30)
+                expense_df["amount"].mean()
+                * min(len(expense_df), 30)
             )
 
         else:
 
             predicted_spending = 0
-
-        # Recommended budget
 
         recommended_budget = (
             predicted_spending * 1.10
@@ -207,8 +188,6 @@ def dashboard():
 
             budget_status = "Over Budget"
 
-        # Top category
-
         category_df = expense_df.groupby(
             "category"
         )["amount"].sum()
@@ -216,13 +195,11 @@ def dashboard():
         if len(category_df) > 0:
 
             top_category = (
-                category_df
-                .idxmax()
+                category_df.idxmax()
             )
 
             top_category_amount = (
-                category_df
-                .max()
+                category_df.max()
             )
 
         else:
@@ -426,13 +403,11 @@ def insights():
         if len(category_data) > 0:
 
             top_category = (
-                category_data
-                .index[0]
+                category_data.index[0]
             )
 
             top_category_amount = (
-                category_data
-                .iloc[0]
+                category_data.iloc[0]
             )
 
         else:
@@ -440,8 +415,6 @@ def insights():
             top_category = "None"
 
             top_category_amount = 0
-
-        # Simple spending trend
 
         if len(expense_df) >= 2:
 
@@ -683,8 +656,6 @@ def add_transaction():
 
             }), 400
 
-        # Validate amount
-
         try:
 
             amount = float(
@@ -703,8 +674,6 @@ def add_transaction():
 
             }), 400
 
-        # Validate type
-
         transaction_type = str(
             data["type"]
         ).lower().strip()
@@ -721,8 +690,6 @@ def add_transaction():
 
             }), 400
 
-        # Load current CSV
-
         current_df = pd.read_csv(
             DATA_FILE
         )
@@ -734,17 +701,12 @@ def add_transaction():
             .str.lower()
         )
 
-        # Create category for old data
-        # if category does not exist
-
         if "category" not in current_df.columns:
 
             current_df["category"] = (
                 current_df["merchant"]
                 .apply(get_category)
             )
-
-        # New transaction
 
         new_transaction = pd.DataFrame([{
 
@@ -767,8 +729,6 @@ def add_transaction():
 
         }])
 
-        # Add transaction
-
         updated_df = pd.concat(
 
             [
@@ -779,8 +739,6 @@ def add_transaction():
             ignore_index=True
 
         )
-
-        # Save CSV
 
         updated_df.to_csv(
 
@@ -830,9 +788,6 @@ def add_transaction():
 
 
 # ============================================================
-# START SERVER
-# ============================================================
-# ============================================================
 # FINANCIAL HEALTH SCORE API
 # ============================================================
 
@@ -859,9 +814,15 @@ def financial_health():
         if income <= 0:
 
             return jsonify({
+
                 "score": 0,
-                "rating": "Insufficient Data",
-                "message": "Add income transactions to calculate your financial health."
+
+                "rating":
+                    "Insufficient Data",
+
+                "message":
+                    "Add income transactions to calculate your financial health."
+
             })
 
         savings = income - expenses
@@ -870,39 +831,48 @@ def financial_health():
             savings / income
         ) * 100
 
-        # Start with 100 points
         score = 100
 
-        # Penalize overspending
         if savings_rate < 0:
+
             score -= 50
 
         elif savings_rate < 10:
+
             score -= 30
 
         elif savings_rate < 20:
+
             score -= 15
 
-        # Keep score between 0 and 100
         score = max(
             0,
             min(100, score)
         )
 
         if score >= 80:
+
             rating = "Excellent"
+
         elif score >= 60:
+
             rating = "Good"
+
         elif score >= 40:
+
             rating = "Fair"
+
         else:
+
             rating = "Needs Improvement"
 
         return jsonify({
 
-            "score": int(score),
+            "score":
+                int(score),
 
-            "rating": rating,
+            "rating":
+                rating,
 
             "total_income":
                 float(income),
@@ -935,30 +905,59 @@ def financial_health():
                 str(e)
 
         }), 500
- @app.route("/delete-transaction/<int:transaction_index>", methods=["DELETE"])
-def delete_transaction(transaction_index):
+
+
+# ============================================================
+# EXPORT TRANSACTIONS API
+# ============================================================
+
+@app.route(
+    "/export-transactions",
+    methods=["GET"]
+)
+def export_transactions():
 
     try:
-        df = pd.read_csv(DATA_PATH)
 
-        if transaction_index < 0 or transaction_index >= len(df):
+        if not os.path.exists(DATA_FILE):
+
             return jsonify({
-                "error": "Invalid transaction index"
+
+                "error":
+                    "Transaction file not found"
+
             }), 404
 
-        df = df.drop(df.index[transaction_index])
+        return send_file(
 
-        df.to_csv(DATA_PATH, index=False)
+            DATA_FILE,
 
-        return jsonify({
-            "message": "Transaction deleted successfully"
-        })
+            mimetype="text/csv",
+
+            as_attachment=True,
+
+            download_name=
+                "wealthiq_transactions.csv"
+
+        )
 
     except Exception as e:
+
         return jsonify({
-            "error": "Failed to delete transaction",
-            "message": str(e)
-        }), 500   
+
+            "error":
+                "Failed to export transactions",
+
+            "message":
+                str(e)
+
+        }), 500
+
+
+# ============================================================
+# START SERVER
+# ============================================================
+
 if __name__ == "__main__":
 
     app.run(
