@@ -1,0 +1,5 @@
+date,merchant,amount,type,category
+2026-08-30,Salary,95000.0,income,Income
+2026-08-30,zamato,895.0,expense,Shopping
+2026-08-30,swiggy,536.0,expense,Food
+2026-08-30,uber,10000.0,expense,Transport
