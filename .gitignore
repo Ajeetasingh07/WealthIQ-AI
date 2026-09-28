@@ -1,13 +1,23 @@
-venv/
+# Python
 __pycache__/
-*.pyc
-.env
+*.py[cod]
+*.pyo
 
-frontend/Downloads/
-frontend/Downloads - Copy/
-data/*_backup.csv
-data/*_before_reset.csv
-backend/*_backup.py
-frontend/*_backup.html
-frontend/*_old.html
-python
+# Virtual environment
+venv/
+.venv/
+env/
+
+# User-generated finance data
+data/users/
+data/auth/
+data/goals/
+
+# Local/generated files
+*.log
+.DS_Store
+
+# Secrets
+.env
+.env.*
+!.env.example
