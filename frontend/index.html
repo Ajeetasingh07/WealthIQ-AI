@@ -1164,6 +1164,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 <script>
 const API = "http://127.0.0.1:5000";
+// ==========================================
+// GLOBAL HELPERS
+// ==========================================
+
+let categoryChartInstance = null;
+let monthlyChartInstance = null;
+
+function money(value) {
+  return `₹${Math.round(Number(value) || 0).toLocaleString("en-IN")}`;
+}
 const USER_KEY = "wealthiq_user_id";
 const AUTH_EMAIL_KEY = "wealthiq_auth_email";
 
