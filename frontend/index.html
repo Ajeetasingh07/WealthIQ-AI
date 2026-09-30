@@ -1163,7 +1163,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 </style>
 
 <script>
-const API = "http://127.0.0.1:5000";
+const API = "https://wealthiq-ai-production.up.railway.app";
+function categoryColor(category) {
+  const colors = {
+    Food: "#f59e0b",
+    Shopping: "#8b5cf6",
+    Transport: "#06b6d4",
+    Entertainment: "#ec4899",
+    Bills: "#ef4444",
+    Housing: "#10b981",
+    Healthcare: "#14b8a6",
+    Education: "#3b82f6",
+    Other: "#64748b",
+    Income: "#22c55e"
+  };
+
+  return colors[category] || "#64748b";
+}
 // ==========================================
 // GLOBAL HELPERS
 // ==========================================
@@ -2226,6 +2242,7 @@ async function refreshDashboard() {
   await loadFinancialHealth();
   await loadInsights();
   await loadTransactions();
+  await loadRecurringExpenses();
 
   const onboarding =
     document.getElementById("onboarding");
